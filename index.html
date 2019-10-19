@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+z
 <head>
 
   <meta charset="utf-8">
@@ -18,19 +18,24 @@
 
 </head>
 
-<body>
+<body class="dark">
 
   <div class="d-flex toggled" id="wrapper">
 
     <!-- Sidebar -->
-    <div class="border-right" id="sidebar-wrapper">
+    <div class="border-right d-flex flex-column" id="sidebar-wrapper">
       <div class="sidebar-heading" style="color: white;"><img src="img/logo.png" height=50 width=70/></div>
-      <div class="list-group list-group-flush">
+      <div class="list-group list-group-flush flex-grow-1">
         <a href="#" class="list-group-item list-group-item-action" id="link">Accueil</a>
         <a href="#" class="list-group-item list-group-item-action" id="link">Mon Jenky</a>
         <a href="#" class="list-group-item list-group-item-action" id="link">Arme</a>
         <a href="#" class="list-group-item list-group-item-action" id="link">Objectif</a>
-        <ul class="nav flex-column" >
+        <a href="#" class="list-group-item list-group-item-action0 mt-auto" id="link">
+          <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1">
+              <label class="custom-control-label" for="customSwitch1" id="customSwitch1_label">Light</label>
+          </div>
+        </a>
       </div>
     </div>
   
@@ -48,7 +53,7 @@
               <a href="#" class="list-group-item list-group-item-action" id="link"><img src="Icon/Objectif.svg"width="32"height="20"></a>
               <ul class="nav flex-column" >
             </div>
-        </div>
+        </div>      
       
 
     <!-- /#sidebar-wrapper -->
@@ -137,6 +142,18 @@
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
+    });
+
+    $("body").on('change', '#customSwitch1', function(){
+      $('body').toggleClass('light dark');
+      if($(this).prop('checked')){
+        $('#customSwitch1_label').text('Dark');
+      }
+      else{
+        $('#customSwitch1_label').text('Light');
+      }
+     
+      
     });
   </script>
 
