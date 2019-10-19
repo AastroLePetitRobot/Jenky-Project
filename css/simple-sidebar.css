@@ -3,10 +3,14 @@
  * Copyright 2013-2019 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
  */
-body {
+body{
   overflow-x: hidden;
   background-color: #070720;
   color: white;
+}
+.light{
+  color: black;
+  background-color: white;
 }
 #link {
   color: #bbbedb;
@@ -35,20 +39,27 @@ body {
   color: white;
   background-color: #17172e;
 }
-#navbar {
+
+.dark #navbar {
   background-color: #0b0b23;
   border-bottom: 1px solid #2c2c40!important;
 }
+
+.light #navbar {
+  background-color: #dbdbdb;
+  border-bottom: 1px solid #d8d8db!important;
+}
+
+
 #sidebar-wrapper {
   min-height: 100vh;
   margin-left: -15rem;
   -webkit-transition: margin .25s ease-out;
   -moz-transition: margin .25s ease-out;
   -o-transition: margin .25s ease-out;
-  transition: margin .25s ease-out;
+  transition: margin .25s ease-out;  
   background-color: #17172e;
   border-right: 0px solid #2c2c40!important;
-  
 }
 
 #sidebar-wrapper .sidebar-heading {
@@ -61,7 +72,7 @@ body {
   margin-top:10px;
 }
 #menu2 .list-group {
-  margin-top: 25px;
+  margin-top: 21px;
 }
 
 #page-content-wrapper {
@@ -81,6 +92,7 @@ body {
   width: 72px;
 }
 
+/*.custom-control-label::before ,.custom-control-label::after{width:20px; height:20px}*/
 
 @media (min-width: 768px) {
   #sidebar-wrapper {
