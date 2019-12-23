@@ -87,7 +87,11 @@ DATABASES = {
         'PORT': '',
     }
 }
-
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = '/'
+TEMPLATE_DIRS = (
+    BASE_DIR + '/templates/',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

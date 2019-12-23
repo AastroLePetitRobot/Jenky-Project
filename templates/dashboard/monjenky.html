@@ -1,0 +1,85 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'dashboard/header.html' %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="profil-picture">
+            <div class="centered">{{ cara.niveau }}</div>
+            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 150px;" src="{% static 'img/male.png' %}" alt="Avatar">
+        </div>
+        <h1 style="font-weight:bolder; margin-top: 50px; margin-left: 20px;">{{ user.username }} </h1>
+        
+    </div>
+
+    <div class="row" style="margin-left: 150px; margin-top: -30px; border-bottom: 1px; border-color: #2c2c40; border-bottom-style: solid; font-weight: bolder;">
+        <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Résumé</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Objets</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Compétences</a>
+            </li>
+          </ul>
+    </div>
+    <div class="container" style="margin-top: 20px;">
+        <div class="container" style="max-width: 300px; margin-left:0; margin-right: 0; float: left;">
+            <div class="afficher_perso">
+            </div>
+        </div>
+        <div class="container" style="max-width: 150px; float: left; margin-left: 100px; margin-right: 20px;">
+            <div class="row">
+                <div class="afficher_casque">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="afficher_torse">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="afficher_pantalon">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="afficher_chaussures">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="container" style="max-width: 100px; margin-left:50px; margin-right: 10px; float: left;">
+            <div class="afficher_arme"></div>
+        </div>
+        <div class="container" style="max-width: 300px; margin-left:50px; margin-right: 0; float: left;">
+            <div class="card" style="width: 18rem; border-width: 0px; border-color: #2c2c40; height: 50px;">
+                <div class="card-body" style="background-color: rgb(23, 23, 46);">
+                  <p class="card-text" style="font-weight: bolder; font-size: 20px">Statistiques </p>
+  
+                </div>
+              </div>
+            <div class="card" style="width: 18rem; border-color: #2c2c40; height: 330px; margin-top: 20px; border-width: 0px; font-weight: bolder; line-height: 45px;">
+                <div class="card-body" style="background-color: rgb(34, 34, 56)">
+                  <p class="card-text">Attaque : {{cara.attaque}} </p>
+                  <p class="card-text">Défense : {{cara.defense}} </p>
+                  <p class="card-text">Vitesse : {{cara.vitesse}} </p>
+                  <p class="card-text">Precision : {{cara.precision}} </p>
+                  <p class="card-text">Effet : {{cara.effet}} </p>
+
+                </div>
+              </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% include 'dashboard/footer.html' %}
+
+
+
