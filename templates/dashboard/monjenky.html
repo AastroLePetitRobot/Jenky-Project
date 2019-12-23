@@ -65,13 +65,24 @@
   
                 </div>
               </div>
-            <div class="card" style="width: 18rem; border-color: #2c2c40; height: 330px; margin-top: 20px; border-width: 0px; font-weight: bolder; line-height: 45px;">
+            <div class="card" style="width: 18rem; border-color: #2c2c40; height: 330px; margin-top: 20px; border-width: 0px; font-weight: bolder; ">
                 <div class="card-body" style="background-color: rgb(34, 34, 56)">
-                  <p class="card-text">Attaque : {{cara.attaque}} </p>
-                  <p class="card-text">Défense : {{cara.defense}} </p>
-                  <p class="card-text">Vitesse : {{cara.vitesse}} </p>
-                  <p class="card-text">Precision : {{cara.precision}} </p>
-                  <p class="card-text">Effet : {{cara.effet}} </p>
+                  <p class="card-text">Attaque : {{ cara.attaque }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ cara.attaque }}%" aria-valuenow="{{ cara.attaque }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  </div>
+                </p> 
+                  <p class="card-text">Défense : {{ cara.defense }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ cara.defense }}%" aria-valuenow="{{ cara.defense }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  </div></p>
+                  <p class="card-text">Vitesse : {{ cara.vitesse }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ cara.vitesse }}%" aria-valuenow="{{ cara.vitesse }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  </div> </p>
+                  <p class="card-text">Precision : {{ cara.precision }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ cara.precision }}%" aria-valuenow="{{ cara.precision }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  </div> </p>
+                  <p class="card-text">Effet : {{ cara.effet }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ cara.effet }}%" aria-valuenow="{{ cara.effet }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  </div> </p>
 
                 </div>
               </div>
