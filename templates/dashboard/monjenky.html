@@ -18,47 +18,44 @@
     <div class="row" style="margin-left: 150px; margin-top: -30px; border-bottom: 1px; border-color: #2c2c40; border-bottom-style: solid; font-weight: bolder;">
         <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link active" href="#">Résumé</a>
+              <a class="nav-link active btn1" href="#">Résumé</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Objets</a>
+              <a class="nav-link btn2" href="#">Objets</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Compétences</a>
+              <a class="nav-link btn3" href="#">Compétences</a>
             </li>
           </ul>
     </div>
-    <div class="container" style="margin-top: 20px;">
+    <div class="container resume" style="margin-top: 20px;">
         <div class="container" style="max-width: 300px; margin-left:0; margin-right: 0; float: left;">
-            <div class="afficher_perso">
+            <div class="afficher_perso" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({%static 'img/mc/steve_face.png' %})">
             </div>
         </div>
-        <div class="container" style="max-width: 150px; float: left; margin-left: 100px; margin-right: 20px;">
+        <div class="container" style="max-width: 150px; float: left; margin-left: 80px; margin-right: 20px;">
             <div class="row">
-                <div class="afficher_casque">
-
+                <div class="afficher_casque" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{casque.nom}}.png);">
                 </div>
             </div>
             <div class="row">
-                <div class="afficher_torse">
-
-                </div>
+              <div class="afficher_torse" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{armure.nom}}.png);">
+              </div>
             </div>
             <div class="row">
-                <div class="afficher_pantalon">
-
-                </div>
+              <div class="afficher_pantalon" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{pantalon.nom}}.png);">
+              </div>
             </div>
             <div class="row">
-                <div class="afficher_chaussures">
-                    
-                </div>
+              <div class="afficher_chaussures" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{chaussures.nom}}.png);">
+              </div>
             </div>
         </div>
-        <div class="container" style="max-width: 100px; margin-left:50px; margin-right: 10px; float: left;">
-            <div class="afficher_arme"></div>
+        <div class="container" style="max-width: 100px; margin-left:20px; margin-top: 125px; margin-right: 40px; float: left;">
+          <div class="afficher_arme" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{arme.nom}}.png);">
+          </div>
         </div>
-        <div class="container" style="max-width: 300px; margin-left:50px; margin-right: 0; float: left;">
+        <div class="container" style="max-width: 300px; margin-left:50px; margin-right: 20px; float: left;">
             <div class="card" style="width: 18rem; border-width: 0px; border-color: #2c2c40; height: 50px;">
                 <div class="card-body" style="background-color: rgb(23, 23, 46);">
                   <p class="card-text" style="font-weight: bolder; font-size: 20px">Statistiques </p>
@@ -89,6 +86,34 @@
         </div>
     </div>
 
+    <script>
+      $(document).ready(function(){
+        $(".btn1").click(function(){
+          $('.resume').show();
+          $('.btn1').addClass("active");
+          $('.objets').hide();
+          $('.btn2').removeClass("active");
+          $('.competences').hide();
+          $('.btn3').removeClass("active");
+        });
+        $(".btn2").click(function(){
+          $('.resume').hide();
+          $('.btn1').removeClass("active");
+          $('.objets').show();
+          $('.btn2').addClass("active");
+          $('.competences').hide();
+          $('.btn3').removeClass("active");
+        });
+        $(".btn3").click(function(){
+          $('.resume').hide();
+          $('.btn1').removeClass("active");
+          $('.objets').hide();
+          $('.btn2').removeClass("active");
+          $('.competences').show();
+          $('.btn3').addClass("active");
+        });
+      });
+    </script>
 {% endblock %}
 {% include 'dashboard/footer.html' %}
 

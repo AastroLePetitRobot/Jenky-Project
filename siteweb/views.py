@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import *
 from django.conf import settings
 from siteweb.models import Caracteristiques
-
+from siteweb.models import Equipement
+from siteweb.models import Objet
 
 # Create your views here.
 def index(request):
@@ -45,4 +46,10 @@ class MonJenkyView(TemplateView):
   template_name = "dashboard/monjenky.html"
   def get(self, request, **kwargs):
     cara = Caracteristiques.objects.get(id_id=request.user.id)
-    return render(request, self.template_name, {'cara' : cara})
+    obj = Equipement.objects.get(id_id=request.user.id)
+    casque = Objet.objects.get(typeobjet=obj.casque)
+    armure = Objet.objects.get(typeobjet=obj.armure)
+    pantalon = Objet.objects.get(typeobjet=obj.pantalon)
+    chaussures = Objet.objects.get(typeobjet=obj.chaussures)
+    arme = Objet.objects.get(typeobjet=obj.arme)
+    return render(request, self.template_name, {'cara' : cara, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme})
