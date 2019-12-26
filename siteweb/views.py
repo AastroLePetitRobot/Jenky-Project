@@ -6,6 +6,7 @@ from django.conf import settings
 from siteweb.models import Caracteristiques
 from siteweb.models import Equipement
 from siteweb.models import Objet
+from siteweb.models import Inventaire
 
 # Create your views here.
 def index(request):
@@ -52,4 +53,5 @@ class MonJenkyView(TemplateView):
     pantalon = Objet.objects.get(typeobjet=obj.pantalon)
     chaussures = Objet.objects.get(typeobjet=obj.chaussures)
     arme = Objet.objects.get(typeobjet=obj.arme)
-    return render(request, self.template_name, {'cara' : cara, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme})
+    inv = Inventaire.objects.get(idjoueur_id=request.user.id)
+    return render(request, self.template_name, {'cara' : cara, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme , 'inv' : inv})

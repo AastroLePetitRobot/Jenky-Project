@@ -172,6 +172,26 @@ body{
   border-style: solid;
   border-color: #2c2c40;
 }
+.list-group-item, .objet-detail {
+  background-color: rgb(34, 34, 56);
+  color: white;
+}
+.objets .list-group{
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 400px;
+}
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
+}
+.card {
+  border-style: none;
+}
 .afficher_arme{
   width: 150px;
   height: 150px;

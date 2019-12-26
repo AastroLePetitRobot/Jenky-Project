@@ -80,8 +80,8 @@ WSGI_APPLICATION = 'ryntel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'jenky',
-        'USER': 'hisakiyo',
+        'NAME': 'iut',
+        'USER': 'gauthier',
         'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '',

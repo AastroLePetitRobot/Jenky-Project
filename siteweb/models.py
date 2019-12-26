@@ -15,7 +15,7 @@ class Objet(models.Model):
     nom = models.TextField()
     pd = models.IntegerField()
     pa = models.IntegerField()
-    typeobjet = models.IntegerField()    
+    typeobjet = models.IntegerField()
 
 class Equipement(models.Model):
     id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=True)
@@ -24,4 +24,9 @@ class Equipement(models.Model):
     pantalon = models.IntegerField()
     chaussures = models.IntegerField()
     arme = models.IntegerField()
+
+class Inventaire(models.Model):
+    idjoueur = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
+    objet = models.IntegerField()
+
 

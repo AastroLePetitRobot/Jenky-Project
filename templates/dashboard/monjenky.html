@@ -85,7 +85,32 @@
               </div>
         </div>
     </div>
+    <div class="container objets" style="margin-top: 20px; display:none;">
+      <div class="container liste-objet" style="width: 25%; margin-left: 0; margin-right: 0; float: left;">
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active">Item 1</a>
+            <a href="#" class="list-group-item list-group-item-action">Item 2</a>
+              {{ inv.objet }}
+            
 
+        </div>
+      </div>
+      <div class="container liste-objet" style="width: 100%; margin-left: 0; margin-right: 0;">
+          <div class="card">
+              <div class="card-body objet-detail">
+                <h4>Item 1</h4>
+              </div>
+            </div>
+        <div class="card">
+          <div class="card-body objet-detail">
+            Détails de l'item
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container competences" style="margin-top: 20px; display:none;">
+      competences
+    </div>
     <script>
       $(document).ready(function(){
         $(".btn1").click(function(){
