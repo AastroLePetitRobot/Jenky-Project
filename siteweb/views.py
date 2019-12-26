@@ -7,6 +7,8 @@ from siteweb.models import Caracteristiques
 from siteweb.models import Equipement
 from siteweb.models import Objet
 from siteweb.models import Inventaire
+from django.db.models import Value
+from django.db.models.functions import Replace
 
 # Create your views here.
 def index(request):
@@ -53,5 +55,81 @@ class MonJenkyView(TemplateView):
     pantalon = Objet.objects.get(typeobjet=obj.pantalon)
     chaussures = Objet.objects.get(typeobjet=obj.chaussures)
     arme = Objet.objects.get(typeobjet=obj.arme)
-    inv = Inventaire.objects.get(idjoueur_id=request.user.id)
-    return render(request, self.template_name, {'cara' : cara, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme , 'inv' : inv})
+    idinv = Inventaire.objects.filter(idjoueur_id=request.user.id)
+    inv = Objet.objects.filter(id__in = [objet.objet for objet in idinv] )
+    return render(request, self.template_name, {'cara' : cara, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme , 'inv' : inv, 'idinv' : idinv})
+
+class MonJenkyItemDelete(TemplateView):
+  def post(self, request, **kwargs): # Ici pas de vérification à faire
+    Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    print(request.POST.get('item'))
+    return HttpResponseRedirect('/dashboard/monjenky/#inventaire');
+
+class MonJenkyItemEquip(TemplateView):
+  def post(self, request, **kwargs): # Vérification si l'user n'a pas déjà un item équipé sur lui
+    inv = Inventaire.objects.get(idjoueur_id=request.user.id, objet=request.POST.get('item')) # on fetch l'item qui veut equiper
+    typeobjet = Objet.objects.get(id=inv.objet).typeobjet
+    stuff = Equipement.objects.get(id_id = request.user.id) # recupère le stuff du joueur
+    if typeobjet == 0 : # si c'est une épée
+      if not (stuff.arme >= 0): # on peut ajouter l'arme
+        Equipement.objects.filter(id_id = request.user.id).update(arme=inv.objet)
+        Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    elif typeobjet == 1 : # si c'est un casque
+      if not (stuff.casque >= 0):
+        Equipement.objects.filter(id_id = request.user.id).update(casque=inv.objet)
+        Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    elif typeobjet == 2 : # si c'est une armure
+      if not (stuff.armure >= 0):
+        Equipement.objects.filter(id_id = request.user.id).update(armure=inv.objet)
+        Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    elif typeobjet == 3 : # si c'est un pantalon
+      if not (stuff.pantalon >= 0):
+        Equipement.objects.filter(id_id = request.user.id).update(pantalon=inv.objet)
+        Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    elif typeobjet == 4 : # si c'est des chaussures
+      if not (stuff.chaussures >= 0):
+        Equipement.objects.filter(id_id = request.user.id).update(chaussures=inv.objet)
+        Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+    else: 
+      print("Erreur")
+    return HttpResponseRedirect('/dashboard/monjenky/#inventaire');
+
+class MonJenkyItemDesequipArme(TemplateView):
+  def post(self, request, **kwargs):
+    print(request.POST.get('arme'))
+    if request.POST.get('arme') != '-1':
+      Equipement.objects.filter().update(arme=-1)
+      Inventaire.objects.create(objet=request.POST.get('arme'), idjoueur_id=request.user.id)
+      return HttpResponseRedirect('/dashboard/monjenky/#')
+
+class MonJenkyItemDesequipCasque(TemplateView):
+  def post(self, request, **kwargs):
+    print(request.POST.get('casque'))
+    if request.POST.get('casque') != '-1':
+      Equipement.objects.filter().update(casque=-1)
+      Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
+    return HttpResponseRedirect('/dashboard/monjenky/#')
+
+class MonJenkyItemDesequipArmure(TemplateView):
+  def post(self, request, **kwargs):
+    print(request.POST.get('armure'))
+    if request.POST.get('armure') != '-1':
+      Equipement.objects.filter().update(armure=-1)
+      Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
+    return HttpResponseRedirect('/dashboard/monjenky/#')
+
+class MonJenkyItemDesequipPantalon(TemplateView):
+  def post(self, request, **kwargs):
+    print(request.POST.get('pantalon'))
+    if request.POST.get('pantalon') != '-1':
+      Equipement.objects.filter().update(pantalon=-1)
+      Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
+    return HttpResponseRedirect('/dashboard/monjenky/#')
+
+class MonJenkyItemDesequipChaussures(TemplateView):
+  def post(self, request, **kwargs):
+    print(request.POST.get('chaussures'))
+    if request.POST.get('chaussures') != '-1':
+      Equipement.objects.filter().update(chaussures=-1)
+      Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
+    return HttpResponseRedirect('/dashboard/monjenky/#')

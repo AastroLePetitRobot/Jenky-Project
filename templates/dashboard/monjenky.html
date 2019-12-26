@@ -21,10 +21,10 @@
               <a class="nav-link active btn1" href="#">Résumé</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn2" href="#">Objets</a>
+              <a class="nav-link btn2" href="#inventaire">Inventaire</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn3" href="#">Compétences</a>
+              <a class="nav-link btn3" href="#competences">Compétences</a>
             </li>
           </ul>
     </div>
@@ -34,25 +34,37 @@
             </div>
         </div>
         <div class="container" style="max-width: 150px; float: left; margin-left: 80px; margin-right: 20px;">
-            <div class="row">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row">
                 <div class="afficher_casque" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{casque.nom}}.png);">
+                  <input name="casque" type="hidden" value="{{casque.id}}">
+                  <button class="close" type="submit" formaction="desequip/casque/"><span aria-hidden="true">&times;</span></button>
                 </div>
             </div>
             <div class="row">
               <div class="afficher_torse" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{armure.nom}}.png);">
+                <input name="armure" type="hidden" value="{{armure.id}}">
+                <button class="close" type="submit" formaction="desequip/armure/"><span aria-hidden="true">&times;</span></button>
               </div>
             </div>
             <div class="row">
               <div class="afficher_pantalon" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{pantalon.nom}}.png);">
+                <input name="pantalon" type="hidden" value="{{pantalon.id}}">
+                <button class="close" type="submit" formaction="desequip/pantalon/"><span aria-hidden="true">&times;</span></button>
               </div>
             </div>
             <div class="row">
               <div class="afficher_chaussures" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{chaussures.nom}}.png);">
+                <input name="chaussures" type="hidden" value="{{chaussures.id}}">
+                <button class="close" type="submit" formaction="desequip/chaussures/"><span aria-hidden="true">&times;</span></button>
               </div>
             </div>
         </div>
         <div class="container" style="max-width: 100px; margin-left:20px; margin-top: 125px; margin-right: 40px; float: left;">
           <div class="afficher_arme" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{arme.nom}}.png);">
+            <input name="arme" type="hidden" value="{{arme.id}}">
+            <button class="close" type="submit" formaction="desequip/arme/"><span aria-hidden="true">&times;</span></button>
           </div>
         </div>
         <div class="container" style="max-width: 300px; margin-left:50px; margin-right: 20px; float: left;">
@@ -64,12 +76,12 @@
               </div>
             <div class="card" style="width: 18rem; border-color: #2c2c40; height: 330px; margin-top: 20px; border-width: 0px; font-weight: bolder; ">
                 <div class="card-body" style="background-color: rgb(34, 34, 56)">
-                  <p class="card-text">Attaque : {{ cara.attaque }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ cara.attaque }}%" aria-valuenow="{{ cara.attaque }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Attaque : {{ arme.pa  }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ arme.pa|add:arme.pa|add:arme.pa }}%" aria-valuenow="{{ arme.pa|add:arme.pa|add:arme.pa }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div>
                 </p> 
-                  <p class="card-text">Défense : {{ cara.defense }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ cara.defense }}%" aria-valuenow="{{ cara.defense }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Défense : {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}%" aria-valuenow="{{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div></p>
                   <p class="card-text">Vitesse : {{ cara.vitesse }}<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: {{ cara.vitesse }}%" aria-valuenow="{{ cara.vitesse }}" aria-valuemin="0" aria-valuemax="50"></div>
@@ -85,59 +97,66 @@
               </div>
         </div>
     </div>
+    
     <div class="container objets" style="margin-top: 20px; display:none;">
-      <div class="container liste-objet" style="width: 25%; margin-left: 0; margin-right: 0; float: left;">
+      {% if inv|length >= 1 %}
+      <div class="container liste-objet" style="width: 25%; margin-left: 0; margin-right: 0; float: left; height: 400px;">
           <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action active">Item 1</a>
-            <a href="#" class="list-group-item list-group-item-action">Item 2</a>
-              {{ inv.objet }}
-            
 
+              {% for objet in inv %}
+                <a href="#" id="btnobjet{{objet.id}}" class="list-group-item list-group-item-action "><img src="{% static 'img/mc/' %}{{objet.nom}}.png" /> {{ objet.id|get_item }}</a>
+              {% endfor %}
         </div>
       </div>
+
       <div class="container liste-objet" style="width: 100%; margin-left: 0; margin-right: 0;">
           <div class="card">
-              <div class="card-body objet-detail">
-                <h4>Item 1</h4>
+              <div class="card-body objet-detail" style="background-color: rgb(23, 23, 46);">
+                <div id="objet-nom">
+
+                </div>
               </div>
             </div>
         <div class="card">
           <div class="card-body objet-detail">
-            Détails de l'item
+            <div id="objet-info">
+
+            </div>
           </div>
         </div>
       </div>
+      {% else %}
+      <h5>Pas d'objets trouvé</h5>
+      {% endif %}
     </div>
     <div class="container competences" style="margin-top: 20px; display:none;">
       competences
     </div>
     <script>
       $(document).ready(function(){
-        $(".btn1").click(function(){
-          $('.resume').show();
-          $('.btn1').addClass("active");
-          $('.objets').hide();
-          $('.btn2').removeClass("active");
-          $('.competences').hide();
-          $('.btn3').removeClass("active");
-        });
-        $(".btn2").click(function(){
-          $('.resume').hide();
-          $('.btn1').removeClass("active");
-          $('.objets').show();
-          $('.btn2').addClass("active");
-          $('.competences').hide();
-          $('.btn3').removeClass("active");
-        });
-        $(".btn3").click(function(){
-          $('.resume').hide();
-          $('.btn1').removeClass("active");
-          $('.objets').hide();
-          $('.btn2').removeClass("active");
-          $('.competences').show();
-          $('.btn3').addClass("active");
-        });
+
+        {% for objet in inv %}
+          {% if forloop.counter == 1 %}
+            $('#objet-nom').html("<h4>{{ objet.id|get_item }}</h4>");
+            $('#objet-info').html('<h5>Point d\'attaque: {{objet.pa}} </h5><h5>Point de défense: {{ objet.pd }}</h5><br><form method="POST">{% csrf_token %}<input name="item" type="hidden" value="{{objet.id}}"><button type="submit" formaction="equip/" class="btn btn-success equip">Equiper</button> <button type="submit" formaction="suppr/" class="btn btn-danger suppr">Supprimer</button></form>');
+            $('#btnobjet{{ objet.id }}').addClass("active");
+           {% endif %}
+        {% endfor %}
+        {% for objet in inv %}
+          $("#btnobjet{{objet.id}}").click(function(){
+            $('#objet-nom').html("<h4>{{ objet.id|get_item }}</h4>");
+            $('#objet-info').html('<h5>Point d\'attaque: {{objet.pa}} </h5><h5>Point de défense: {{ objet.pd }}</h5><br><form method="POST">{% csrf_token %}<input name="item" type="hidden" value="{{objet.id}}"><button type="submit" formaction="equip/" class="btn btn-success equip">Equiper</button> <button type="submit" formaction="suppr/" class="btn btn-danger suppr">Supprimer</button></form>');
+            {% for objet2 in inv %}
+              {% if objet2.id == objet.id %}
+                $('#btnobjet{{objet2.id}}').addClass("active");
+              {% else %}
+                $('#btnobjet{{objet2.id}}').removeClass("active");
+              {% endif %}
+            {% endfor %}
+          });
+        {% endfor %}
       });
+      
     </script>
 {% endblock %}
 {% include 'dashboard/footer.html' %}
