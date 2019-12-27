@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^dashboard/monjenky/desequip/armure/$', login_required(MonJenkyItemDesequipArmure.as_view())),
     url(r'^dashboard/monjenky/desequip/pantalon/$', login_required(MonJenkyItemDesequipPantalon.as_view())),
     url(r'^dashboard/monjenky/desequip/chaussures/$', login_required(MonJenkyItemDesequipChaussures.as_view())),
+    url(r'^dashboard/profile/$', login_required(ProfileView.as_view())),
+    url(r'^dashboard/profile/update/$', login_required(ProfileUpdate.as_view()))
 ]

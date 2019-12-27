@@ -9,6 +9,7 @@ from siteweb.models import Objet
 from siteweb.models import Inventaire
 from django.db.models import Value
 from django.db.models.functions import Replace
+from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
@@ -133,3 +134,25 @@ class MonJenkyItemDesequipChaussures(TemplateView):
       Equipement.objects.filter().update(chaussures=-1)
       Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
     return HttpResponseRedirect('/dashboard/monjenky/#')
+    
+class ProfileView(TemplateView):
+  template_name = 'dashboard/profile.html'
+  def get(self, request, **kwargs):
+    return render(request, self.template_name)
+
+class ProfileUpdate(TemplateView):
+  def post(self, request, **kwargs):
+    if request.POST.get('ln') != '' and request.POST.get('fn') != '' and request.POST.get('mdpactuel') != ''  and request.POST.get('mail') != '': # si la requete n'est pas nulle
+      if(request.user.check_password(request.POST.get('mdpactuel'))):
+        User.objects.filter(id=request.user.id).update(email = request.POST.get('mail'), first_name = request.POST.get('fn'), last_name = request.POST.get('ln'))
+        if(request.POST.get('mdpnouveau') != ''):
+          request.user.set_password(request.POST.get('mdpnouveau'))
+          request.user.save()
+      else:
+        print("Mauvais mdp")
+    else:
+      print("nul")
+    return HttpResponseRedirect('/dashboard/profile/')
+
+
+  

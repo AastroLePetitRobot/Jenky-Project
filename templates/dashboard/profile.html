@@ -1,0 +1,45 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'dashboard/header.html' %}
+{% block content %}
+<div class="container" style="width: 600px;">
+    <br>
+    <form class="text-center p-5" action="update/" method="post" style="border-style: solid; border-width: 1px; border-color: #2c2c40;">
+        {% csrf_token %}
+        <p class="h4 mb-4">Profil</p>
+        <div class="form-row mb-4">
+            <div class="col">
+                <input name="fn" type="text" class="form-control" value="{{user.first_name}}">
+            </div>
+            <div class="col">
+                <input name="ln" type="text" class="form-control" value="{{user.last_name}}">
+            </div>
+        </div>
+        <input type="text" class="form-control" value="{{user.username}}" disabled>
+        <small class="form-text text-muted mb-4">
+            Contactez un administrateur du site pour le changer
+        </small>
+        <input name="mdpactuel" type="password" class="form-control" placeholder="Mot de passe actuel" >
+        <br>
+        <input name="mdpnouveau" type="password" class="form-control" placeholder="Nouveau mot de passe" >
+        <small class="form-text text-muted mb-4">
+            Au moins 8 caractères et une majuscule !
+        </small>
+        <input name="mail" type="email" class="form-control" value="{{user.email}}">
+        <br>
+        <h6>Date de la dernière connexion : {{user.last_login}}</h6>
+        <button class="btn btn-info my-4 btn-block" type="submit">Mettre à jour</button>
+        <hr>
+        <p>En utilisant
+            <em>Super Jenky</em> vous acceptez nos
+            <a href="" target="_blank">conditions d'utilisations</a>
+
+    </form>
+</div>
+{% endblock %}
+{% include 'dashboard/footer.html' %}
+
+
+
