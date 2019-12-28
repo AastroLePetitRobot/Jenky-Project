@@ -31,8 +31,10 @@ class LoginView(TemplateView):
     user = authenticate(username=username, password=password)
     if user is not None and user.is_active:
         login(request, user)
-        messages.error(request, 'Veuillez d\'abord vous connecter')
+        messages.success(request, 'Connexion réussie')
         return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
+    else:
+      messages.error(request, 'Mauvais mot de passe')
     return render(request, self.template_name)
 
 
