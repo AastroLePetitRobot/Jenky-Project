@@ -58,34 +58,19 @@ $("#menu-toggle").click(function(e) {
     $('.competences').show();
     $('.btn3').addClass("active");
   });
-  $(document).on('mouseenter', '.afficher_casque', function () {
+  $(document).on('mouseenter', '.afficher_stuff', function () {
     $(this).find(":button").show();
-  }).on('mouseleave', '.afficher_casque', function () {
+  }).on('mouseleave', '.afficher_stuff', function () {
       $(this).find(":button").hide();
   });
-  $(document).on('mouseenter', '.afficher_torse', function () {
-    $(this).find(":button").show();
-  }).on('mouseleave', '.afficher_torse', function () {
-      $(this).find(":button").hide();
-  });
-  $(document).on('mouseenter', '.afficher_pantalon', function () {
-    $(this).find(":button").show();
-  }).on('mouseleave', '.afficher_pantalon', function () {
-      $(this).find(":button").hide();
-  });
-  $(document).on('mouseenter', '.afficher_chaussures', function () {
-    $(this).find(":button").show();
-  }).on('mouseleave', '.afficher_chaussures', function () {
-      $(this).find(":button").hide();
-  });
-  $(document).on('mouseenter', '.afficher_arme', function () {
-    $(this).find(":button").show();
-  }).on('mouseleave', '.afficher_arme', function () {
-      $(this).find(":button").hide();
-  });
-
   $(document).on('mouseenter', '.item', function () {
-    $(this).find(":button").show();
+    $(this).find(".close").show();
   }).on('mouseleave', '.item', function () {
-      $(this).find(":button").hide();
+      $(this).find(".close").hide();
   });
+  $(".alert-danger").fadeTo(2000, 100).slideUp(500, function(){
+    $(".alert-danger").slideUp(500);
+});
+$(".alert-success").fadeTo(2000, 100).slideUp(500, function(){
+  $(".alert-success").slideUp(500);
+});

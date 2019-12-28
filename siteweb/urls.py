@@ -17,7 +17,7 @@ urlpatterns = [
     # monjenky
     url(r'^dashboard/monjenky/$', login_required(MonJenkyView.as_view())),
     # api monjenky 
-    url(r'^dashboard/monjenky/suppr/$', login_required(MonJenkyItemDelete.as_view())),
+    url(r'^dashboard/monjenky/vendre/$', login_required(MonJenkyItemVendre.as_view())),
     url(r'^dashboard/monjenky/equip/$', login_required(MonJenkyItemEquip.as_view())),
     url(r'^dashboard/monjenky/desequip/arme/$', login_required(MonJenkyItemDesequipArme.as_view())),
     url(r'^dashboard/monjenky/desequip/casque/$', login_required(MonJenkyItemDesequipCasque.as_view())),

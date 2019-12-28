@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 import random
 from django.utils import timezone
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -25,12 +26,12 @@ class LoginView(TemplateView):
   template_name = 'index.html'
 
   def post(self, request, **kwargs):
-
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
     user = authenticate(username=username, password=password)
     if user is not None and user.is_active:
         login(request, user)
+        messages.error(request, 'Veuillez d\'abord vous connecter')
         return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
     return render(request, self.template_name)
 
@@ -38,7 +39,6 @@ class LoginView(TemplateView):
 class LogoutView(TemplateView):
 
   template_name = 'index.html'
-
   def get(self, request, **kwargs):
     logout(request)
     return render(request, self.template_name)
@@ -63,9 +63,13 @@ class MonJenkyView(TemplateView):
     inv = Objet.objects.filter(id__in = [objet.objet for objet in idinv] )
     return render(request, self.template_name, {'caracteristiques' : caracteristiques, 'casque' : casque, 'armure' : armure, 'pantalon' : pantalon, 'chaussures' : chaussures, 'arme' : arme , 'inv' : inv, 'idinv' : idinv})
 
-class MonJenkyItemDelete(TemplateView):
-  def post(self, request, **kwargs): # Ici pas de vérification à faire
-    Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+class MonJenkyItemVendre(TemplateView):
+  def post(self, request, **kwargs): 
+    if Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()[0] == 1: # si on réussi à supprimer l'item, on peut rajouter des golds
+      Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold + Objet.objects.get(id=request.POST.get('item')).prix_vente)
+      messages.success(request, 'Objet bien vendu')
+    else:
+      messages.error(request, 'Triche possible')
     return HttpResponseRedirect('/dashboard/monjenky/#inventaire')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -79,24 +83,29 @@ class MonJenkyItemEquip(TemplateView):
       if not (stuff.arme >= 0): # on peut ajouter l'arme
         Equipement.objects.filter(id_id = request.user.id).update(arme=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        messages.success(request, 'L\'arme a bien été équipée')
     elif typeobjet == 1 : # si c'est un casque
       if not (stuff.casque >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(casque=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        messages.success(request, 'Le casque a bien été équipé')
     elif typeobjet == 2 : # si c'est une armure
       if not (stuff.armure >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(armure=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        messages.success(request, 'L\'armure a bien été équipée')
     elif typeobjet == 3 : # si c'est un pantalon
       if not (stuff.pantalon >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(pantalon=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        messages.success(request, 'Le pantalon a bien été équipé')
     elif typeobjet == 4 : # si c'est des chaussures
       if not (stuff.chaussures >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(chaussures=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        messages.success(request, 'Les chaussures ont bien été équipées')
     else: 
-      print("Erreur")
+      messages.error(request, 'Type d\'objet non trouvé')
     return HttpResponseRedirect('/dashboard/monjenky/#inventaire')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -104,17 +113,29 @@ class MonJenkyItemEquip(TemplateView):
 class MonJenkyItemDesequipArme(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('arme') != '-1':
-      Equipement.objects.filter().update(arme=-1)
-      Inventaire.objects.create(objet=request.POST.get('arme'), idjoueur_id=request.user.id)
-      return HttpResponseRedirect('/dashboard/monjenky/#')
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('arme')).count() == 0:
+        Equipement.objects.filter().update(arme=-1)
+        Inventaire.objects.create(objet=request.POST.get('arme'), idjoueur_id=request.user.id)
+        messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
+    else:
+      messages.error(request, 'Contactez l\'administrateur du site')
+    return HttpResponseRedirect('/dashboard/monjenky/#')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipCasque(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('casque') != '-1':
-      Equipement.objects.filter().update(casque=-1)
-      Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('casque')).count() == 0:
+        Equipement.objects.filter().update(casque=-1)
+        Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
+        messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
+    else:
+      messages.error(request, 'Contactez l\'administrateur du site')
     return HttpResponseRedirect('/dashboard/monjenky/#')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -122,8 +143,14 @@ class MonJenkyItemDesequipCasque(TemplateView):
 class MonJenkyItemDesequipArmure(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('armure') != '-1':
-      Equipement.objects.filter().update(armure=-1)
-      Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('armure')).count() == 0:
+        Equipement.objects.filter().update(armure=-1)
+        Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
+        messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
+    else:
+      messages.error(request, 'Contactez l\'administrateur du site')
     return HttpResponseRedirect('/dashboard/monjenky/#')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -131,17 +158,29 @@ class MonJenkyItemDesequipArmure(TemplateView):
 class MonJenkyItemDesequipPantalon(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('pantalon') != '-1':
-      Equipement.objects.filter().update(pantalon=-1)
-      Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('pantalon')).count() == 0:
+        Equipement.objects.filter().update(pantalon=-1)
+        Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
+        messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
+    else:
+      messages.error(request, 'Contactez l\'administrateur du site')
     return HttpResponseRedirect('/dashboard/monjenky/#')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipChaussures(TemplateView):
   def post(self, request, **kwargs):
-    if request.POST.get('chaussures') != '-1':
-      Equipement.objects.filter().update(chaussures=-1)
-      Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
+    if request.POST.get('chaussures') != '-1': # Si l'objet n'est pas nul
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('chaussures')).count() == 0:
+        Equipement.objects.filter().update(chaussures=-1)
+        Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
+        messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
+    else:
+      messages.error(request, 'Contactez l\'administrateur du site')
     return HttpResponseRedirect('/dashboard/monjenky/#')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -160,10 +199,11 @@ class ProfileUpdate(TemplateView):
         if(request.POST.get('mdpnouveau') != ''):
           request.user.set_password(request.POST.get('mdpnouveau'))
           request.user.save()
+        messages.success(request, 'Profil bien mis à jour')
       else:
-        print("Mauvais mdp")
+        messages.error(request, 'Mauvais mot de passe fourni')
     else:
-      print("Au moins un des champs est nul")
+      messages.error(request, 'Veuillez remplir tous les champs !')
     return HttpResponseRedirect('/dashboard/profile/')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -202,7 +242,7 @@ class ShopView(TemplateView):
       liste_items.append(Objet.objects.get(id=shop.objet5))
     else:
       liste_items.append(-1)
-    minute =  60-(datetime.now(tz=timezone.utc).minute - (shop.dateupdate + timedelta(hours=1)).minute)
+    minute = round(((shop.dateupdate + timedelta(hours=1)) - datetime.now(tz=timezone.utc)).total_seconds()/60)
     return render(request, self.template_name, {'shop': shop, 'caracteristiques' : caracteristiques, 'can_update' : can_update, 'liste_items': liste_items, 'minute' :  minute})
 
 
@@ -213,7 +253,7 @@ class ShopUpdate(TemplateView):
       nbmax = Objet.objects.aggregate(Max('id'))['id__max']
       Shop.objects.filter(id=request.user.id).update(objet0 = random.randint(0,nbmax), objet1 = random.randint(0,nbmax), objet2 = random.randint(0,nbmax), objet3 = random.randint(0,nbmax), objet4 = random.randint(0,nbmax), objet5 = random.randint(0,nbmax), dateupdate = datetime.now(tz=timezone.utc))
     else: # triche
-      print("Petit malin !")
+      messages.error(request, 'Triche possible, tu n\'a pas été autorisé à mettre à jour le shop')
     return HttpResponseRedirect('/dashboard/shop/')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -224,22 +264,33 @@ class ShopEquip(TemplateView):
     id_item = request.POST.get('item'+pos_item)
     shop = Shop.objects.get(id=request.user.id)
     if int(eval('shop.objet'+pos_item)) == int(id_item): # verif si l'user a l'objet en question dans le shop
-      pos_item = int(pos_item)
-      if(pos_item == 0):
-        Shop.objects.filter(id=request.user.id).update(objet0 = -1)
-      elif(pos_item == 1):
-        Shop.objects.filter(id=request.user.id).update(objet1 = -1)
-      elif(pos_item == 2):
-        Shop.objects.filter(id=request.user.id).update(objet2 = -1)
-      elif(pos_item == 3):
-        Shop.objects.filter(id=request.user.id).update(objet3 = -1)
-      elif(pos_item == 4):
-        Shop.objects.filter(id=request.user.id).update(objet4 = -1)
-      elif(pos_item == 5):
-        Shop.objects.filter(id=request.user.id).update(objet5 = -1)
-      Inventaire.objects.create(objet=id_item, idjoueur_id=request.user.id)
+      if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=id_item).count() == 0: # si l'user n'a pas l'objet dans son inventaire
+        if Equipement.objects.filter(id_id=request.user.id, arme=id_item).count() == 0 and Equipement.objects.filter(id_id=request.user.id, casque=id_item).count() == 0 and Equipement.objects.filter(id_id=request.user.id, armure=id_item).count() == 0 and Equipement.objects.filter(id_id=request.user.id, pantalon=id_item).count() == 0 and Equipement.objects.filter(id_id=request.user.id, chaussures=id_item).count() == 0:
+          if Caracteristiques.objects.get(id=request.user.id).gold - Objet.objects.get(id=id_item).prix_achat >= 0: # si l'user peut l'acheter
+            pos_item = int(pos_item)
+            if(pos_item == 0):
+              Shop.objects.filter(id=request.user.id).update(objet0 = -1)
+            elif(pos_item == 1):
+              Shop.objects.filter(id=request.user.id).update(objet1 = -1)
+            elif(pos_item == 2):
+              Shop.objects.filter(id=request.user.id).update(objet2 = -1)
+            elif(pos_item == 3):
+              Shop.objects.filter(id=request.user.id).update(objet3 = -1)
+            elif(pos_item == 4):
+              Shop.objects.filter(id=request.user.id).update(objet4 = -1)
+            elif(pos_item == 5):
+              Shop.objects.filter(id=request.user.id).update(objet5 = -1)
+            Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold-Objet.objects.get(id=id_item).prix_achat)
+            Inventaire.objects.create(objet=id_item, idjoueur_id=request.user.id)
+            messages.success(request, 'Objet bien ajouté à l\'inventaire')
+          else:
+            messages.error(request, 'Pas assez de golds')
+        else:
+          messages.error(request, 'Objet déjà équipé')
+      else:
+        messages.error(request, 'Objet déjà dans l\'inventaire')
     else:
-      print("Petit malin !")
+      messages.error(request, 'Objet non trouvé dans le shop, triche possible')
     return HttpResponseRedirect('/dashboard/shop/')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')

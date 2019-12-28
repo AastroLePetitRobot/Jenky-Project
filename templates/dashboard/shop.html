@@ -9,24 +9,28 @@
     <form method="POST" action="to_inventaire/">
         {% csrf_token %}
     <br>
+    
     <div class="list-item" style="margin-left: 10;">
         <div class="row">
             <div class="item" style="background-image: url({% static "img/mc/"%}{{liste_items.0.nom}}.png);">
+                <input name="item0" type="hidden" value="{{liste_items.0.id}}">
                 {% if liste_items.0 != -1 %}
-                    <input name="item0" type="hidden" value="{{liste_items.0.id}}">
                     <button class="close" type="submit" name="item" value="0"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.0.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
             </div>
             <div class="item" style="background-image: url({% static "img/mc/"%}{{liste_items.1.nom}}.png);">
                 <input name="item1" type="hidden" value="{{liste_items.1.id}}">
                 {% if liste_items.1 != -1 %}
                     <button class="close" type="submit" name="item" value="1"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.1.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
             </div>
             <div class="item" style="background-image: url({% static "img/mc/"%}{{liste_items.2.nom}}.png);">
                 <input name="item2" type="hidden" value="{{liste_items.2.id}}">
                 {% if liste_items.2 != -1 %}
                     <button class="close" type="submit" name="item" value="2"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.2.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
             </div>
         </div>
@@ -35,18 +39,21 @@
                 <input name="item3" type="hidden" value="{{liste_items.3.id}}">
                 {% if liste_items.3 != -1 %}
                     <button class="close" type="submit" name="item" value="3"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.3.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
             </div>
             <div class="item" style="background-image: url({% static "img/mc/"%}{{liste_items.4.nom}}.png);">
                 <input name="item4" type="hidden" value="{{liste_items.4.id}}">
                 {% if liste_items.4 != -1 %}
                     <button class="close" type="submit" name="item" value="4"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.4.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
                 </div>
             <div class="item" style="background-image: url({% static "img/mc/"%}{{liste_items.5.nom}}.png);">
                 <input name="item5" type="hidden" value="{{liste_items.5.id}}">
                 {% if liste_items.5 != -1 %}
                     <button class="close" type="submit" name="item" value="5"><span aria-hidden="true">&#10004;</span></button>
+                    <button type="button" class="btn prix_item" style="color: white;" disabled="">{{liste_items.5.prix_achat}}<img style="margin-bottom: 2px; width: 25px; height: 20px;" src="{% static 'img/gold.png' %}"></button>
                 {% endif %}
             </div>
         </div>

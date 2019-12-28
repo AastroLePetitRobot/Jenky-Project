@@ -17,6 +17,8 @@ class Objet(models.Model):
     pd = models.IntegerField()
     pa = models.IntegerField()
     typeobjet = models.IntegerField()
+    prix_achat = models.IntegerField()
+    prix_vente = models.IntegerField()
 
 class Equipement(models.Model):
     id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=True)

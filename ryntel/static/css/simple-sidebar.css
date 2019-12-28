@@ -208,9 +208,24 @@ body{
   border-width: 1px;
   border-color: #2c2c40;
 }
-.resume button, .item button{
+.resume button, .item .close{
   display: none;
   margin-right: 5px;
+}
+.alert-fixed {
+  position:fixed; 
+  bottom: 0px; 
+  left: 15px;
+}
+.alert-danger {
+  background-color: hsla(355,60%,19%,1);
+  border-color: hsla(354,60%,23%,1);
+  color: white;
+}
+.alert-success {
+  background-color: hsla(134,41%,22%,1);
+  border-color: hsla(134,41%,27%,1);
+  color: white;
 }
 .item {
   height: 150px;
@@ -221,6 +236,10 @@ body{
   background-size: 50%;
   background-position: center;
   background-repeat: no-repeat;
+}
+.prix_item {
+  color: white;
+  display: block;
 }
 .list-item {
   width: 450px;
