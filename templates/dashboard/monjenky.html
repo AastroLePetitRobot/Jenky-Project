@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div class="profil-picture">
-            <div class="centered">{{ cara.niveau }}</div>
+            <div class="centered">{{ caracteristiques.niveau }}</div>
             <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 150px;" src="{% static 'img/male.png' %}" alt="Avatar">
         </div>
         <h1 style="font-weight:bolder; margin-top: 50px; margin-left: 20px;">{{ user.username }} </h1>
@@ -39,32 +39,42 @@
               <div class="row">
                 <div class="afficher_casque" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{casque.nom}}.png);">
                   <input name="casque" type="hidden" value="{{casque.id}}">
-                  <button class="close" type="submit" formaction="desequip/casque/"><span aria-hidden="true">&times;</span></button>
+                  {% if casque.id != -1 %}
+                    <button class="close" type="submit" formaction="desequip/casque/"><span aria-hidden="true">&times;</span></button>
+                    {% endif %}
                 </div>
             </div>
             <div class="row">
               <div class="afficher_torse" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{armure.nom}}.png);">
                 <input name="armure" type="hidden" value="{{armure.id}}">
-                <button class="close" type="submit" formaction="desequip/armure/"><span aria-hidden="true">&times;</span></button>
+                {% if armure.id != -1 %}
+                  <button class="close" type="submit" formaction="desequip/armure/"><span aria-hidden="true">&times;</span></button>
+                {% endif %}
               </div>
             </div>
             <div class="row">
               <div class="afficher_pantalon" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{pantalon.nom}}.png);">
                 <input name="pantalon" type="hidden" value="{{pantalon.id}}">
-                <button class="close" type="submit" formaction="desequip/pantalon/"><span aria-hidden="true">&times;</span></button>
+                {% if pantalon.id != -1 %}
+                  <button class="close" type="submit" formaction="desequip/pantalon/"><span aria-hidden="true">&times;</span></button>
+                {% endif %}
               </div>
             </div>
             <div class="row">
               <div class="afficher_chaussures" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{chaussures.nom}}.png);">
                 <input name="chaussures" type="hidden" value="{{chaussures.id}}">
-                <button class="close" type="submit" formaction="desequip/chaussures/"><span aria-hidden="true">&times;</span></button>
+                {% if chaussures.id != -1 %}
+                  <button class="close" type="submit" formaction="desequip/chaussures/"><span aria-hidden="true">&times;</span></button>
+                {% endif %}
               </div>
             </div>
         </div>
         <div class="container" style="max-width: 100px; margin-left:20px; margin-top: 125px; margin-right: 40px; float: left;">
           <div class="afficher_arme" style="background-repeat: no-repeat; background-size: 50%; background-position: center; background-image: url({% static "img/mc/" %}{{arme.nom}}.png);">
             <input name="arme" type="hidden" value="{{arme.id}}">
-            <button class="close" type="submit" formaction="desequip/arme/"><span aria-hidden="true">&times;</span></button>
+            {% if arme.id != -1 %}
+              <button class="close" type="submit" formaction="desequip/arme/"><span aria-hidden="true">&times;</span></button>
+            {% endif %}
           </div>
         </div>
         <div class="container" style="max-width: 300px; margin-left:50px; margin-right: 20px; float: left;">
@@ -83,14 +93,14 @@
                   <p class="card-text">Défense : {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}%" aria-valuenow="{{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div></p>
-                  <p class="card-text">Vitesse : {{ cara.vitesse }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ cara.vitesse }}%" aria-valuenow="{{ cara.vitesse }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Vitesse : {{ caracteristiques.vitesse }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.vitesse }}%" aria-valuenow="{{ caracteristiques.vitesse }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div> </p>
-                  <p class="card-text">Precision : {{ cara.precision }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ cara.precision }}%" aria-valuenow="{{ cara.precision }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Precision : {{ caracteristiques.precision }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.precision }}%" aria-valuenow="{{ caracteristiques.precision }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div> </p>
-                  <p class="card-text">Effet : {{ cara.effet }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ cara.effet }}%" aria-valuenow="{{ cara.effet }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Effet : {{ caracteristiques.effet }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.effet }}%" aria-valuenow="{{ caracteristiques.effet }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div> </p>
 
                 </div>

@@ -156,7 +156,7 @@ body{
   border-width: 1px;
 }
 
-.afficher_casque:hover, .afficher_perso:hover, .afficher_torse:hover, .afficher_pantalon:hover, .afficher_chaussures:hover, .afficher_arme:hover {
+.afficher_casque:hover, .afficher_perso:hover, .afficher_torse:hover, .afficher_pantalon:hover, .afficher_chaussures:hover, .afficher_arme:hover, .item:hover {
   background-color: #17a2b8;
 }
 .afficher_torse{
@@ -197,6 +197,7 @@ body{
 ::-webkit-scrollbar-thumb {
   background: #FF0000;
 }
+
 .card {
   border-style: none;
 }
@@ -207,11 +208,28 @@ body{
   border-width: 1px;
   border-color: #2c2c40;
 }
-.resume button{
+.resume button, .item button{
   display: none;
   margin-right: 5px;
 }
-
+.item {
+  height: 150px;
+  width: 160px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: darkslategray;
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.list-item {
+  width: 450px;
+  margin: 0 auto;
+}
+.boutonupdate{
+  width: 120px;
+  margin: 0 auto;
+}
 @media (min-width: 768px) {
   #sidebar-wrapper {
     margin-left: 0;

@@ -83,3 +83,9 @@ $("#menu-toggle").click(function(e) {
   }).on('mouseleave', '.afficher_arme', function () {
       $(this).find(":button").hide();
   });
+
+  $(document).on('mouseenter', '.item', function () {
+    $(this).find(":button").show();
+  }).on('mouseleave', '.item', function () {
+      $(this).find(":button").hide();
+  });

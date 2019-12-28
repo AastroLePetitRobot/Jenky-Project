@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Caracteristiques(models.Model):
     id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=True)
     niveau = models.IntegerField()
+    gold = models.IntegerField()
     attaque = models.IntegerField()
     defense = models.IntegerField()
     vitesse = models.IntegerField()
@@ -29,4 +30,13 @@ class Inventaire(models.Model):
     idjoueur = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
     objet = models.IntegerField()
 
+class Shop(models.Model):
+    id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=True)
+    objet0 = models.IntegerField()
+    objet1 = models.IntegerField()
+    objet2 = models.IntegerField()
+    objet3 = models.IntegerField()
+    objet4 = models.IntegerField()
+    objet5 = models.IntegerField()
+    dateupdate = models.DateTimeField()
 
