@@ -1,5 +1,0 @@
-0 Epée en diamant
-1 Casque en diamant
-2 Torse en diamant
-3 Pantalon en diamant
-4 Bottes en diamant
