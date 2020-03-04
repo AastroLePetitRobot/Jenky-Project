@@ -6,12 +6,11 @@
 {% block content %}
 <div class="container" style="width: 600px;">
     <br>
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalinfo" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
         <div class="modal-content" style="margin-top: 45%;">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title">Modal title</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -27,36 +26,25 @@
     </div>
     <div class="ljoueur">
     <center><h3>Liste des joueurs</h3></center><br>
-    <div class="row list-joueur">
-        <div class="profil-picture">
-            <div class="centered">5</div>
-            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
-        </div>
-        <div class="row" style="width: 450px; margin-left: 30px;">
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">Gauthier </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
-        </div>
-      </div>
-      <div class="row list-joueur">
-        <div class="profil-picture">
-            <div class="centered">5</div>
-            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
-        </div>
-        <div class="row" style="width: 450px; margin-left: 30px;">
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">dqsdssqdds </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
-        </div>
-      </div>
-      <div class="row list-joueur">
-        <div class="profil-picture">
-            <div class="centered">5</div>
-            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
-        </div>
-        <div class="row" style="width: 450px; margin-left: 30px;">
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">qdssdqdsq </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
-            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
-        </div>
-      </div>
+    {% for users in listuser %} 
+        {% for userscar in listusercar %}
+            {% if users.id == userscar.id.id %}
+                {% if users.username != user.username %} 
+                    <div class="row list-joueur" id="joueur{{users.id}}">
+                        <div class="profil-picture">
+                            <div class="centered">{{userscar.niveau}}</div>
+                            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
+                        </div>
+                        <div class="row" style="width: 450px; margin-left: 30px;">
+                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">{{users.username}}</h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#modalinfo" data-id="{{users.id}}" user="{{users.username}}">Info</button>      </div>
+                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style=""><img class='icones' src='/static/img/icons/atq.png'>{{userscar.attaque}} <img class='icones' src='/static/img/icons/def.png'> {{userscar.defense}} <img class='icones' src='/static/img/icons/acc.png'> {{userscar.precision}} <img class='icones' src='/static/img/icons/spd.png'> {{userscar.vitesse}}</p></div><button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+    {% endfor %}
+
       <div class="update" style="width: 100px; margin: 0 auto;">
         <button type="button" class="btn btn-success">Rafraichir</button>
       </div>
