@@ -1,0 +1,13 @@
+insert into siteweb_equipement values(1,1,2,3,4,0);
+insert into siteweb_objet values(-1,'empty',0,0,-1,0,0);
+insert into siteweb_objet values(0,'diamond_sword',0,12,0,20,10);
+insert into siteweb_objet values(1,'diamond_helmet',5,0,1,20,10);
+insert into siteweb_objet values(2,'diamond_chestplate',12,0,2,20,10);
+insert into siteweb_objet values(3,'diamond_leggings',7,0,3,20,10);
+insert into siteweb_objet values(4,'diamond_boots',5,0,4,20,10);
+insert into siteweb_caracteristiques values(1,50,0,80,90,70,50,70);
+insert into siteweb_inventaire(objet,idjoueur_id) values (4,1);
+insert into siteweb_inventaire(objet,idjoueur_id) values (0,1);
+insert into siteweb_inventaire(objet,idjoueur_id) values (2,1);
+alter table siteweb_inventaire add constraint cle_unique UNIQUE(objet,idjoueur_id);
+insert into siteweb_shop values(1,0,1,2,3,4,3,CURRENT_TIMESTAMP);
