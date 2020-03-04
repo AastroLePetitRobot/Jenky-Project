@@ -23,6 +23,11 @@ body{
   color: white!important;
 
 }
+canvas {
+  border:1px solid rgb(44, 44, 64);
+  background-image: url("/static/img/background.png");
+  background-size: cover;
+}
 #menu-toggle{
   background-color: #08a6ff!important;
   border-color: #2c2c40!important;
@@ -129,6 +134,15 @@ body{
   border-color: yellow;
   border-width: 1px;
   font-weight:bolder;
+}
+.list-joueur{
+  overflow: auto;
+  border: 1px solid #2c2c40!important;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+.list-joueur .btn{
+
 }
 /*.custom-control-label::before ,.custom-control-label::after{width:20px; height:20px}*/
 .menu-dark{

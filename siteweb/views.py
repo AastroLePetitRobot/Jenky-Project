@@ -296,3 +296,10 @@ class ShopEquip(TemplateView):
     return HttpResponseRedirect('/dashboard/shop/')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
+  
+
+class AreneView(TemplateView):
+  template_name = 'dashboard/arene.html'
+  def get(self, request, **kwargs):
+    caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
+    return render(request, self.template_name, {'caracteristiques' : caracteristiques})

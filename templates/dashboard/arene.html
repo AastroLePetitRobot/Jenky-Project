@@ -1,0 +1,80 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'dashboard/header.html' %}
+{% block content %}
+<div class="container" style="width: 600px;">
+    <br>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin-top: 45%;">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                e Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker.
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="ljoueur">
+    <center><h3>Liste des joueurs</h3></center><br>
+    <div class="row list-joueur">
+        <div class="profil-picture">
+            <div class="centered">5</div>
+            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
+        </div>
+        <div class="row" style="width: 450px; margin-left: 30px;">
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">Gauthier </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+        </div>
+      </div>
+      <div class="row list-joueur">
+        <div class="profil-picture">
+            <div class="centered">5</div>
+            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
+        </div>
+        <div class="row" style="width: 450px; margin-left: 30px;">
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">dqsdssqdds </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+        </div>
+      </div>
+      <div class="row list-joueur">
+        <div class="profil-picture">
+            <div class="centered">5</div>
+            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 90px;" src="/static/img/male.png" alt="Avatar">
+        </div>
+        <div class="row" style="width: 450px; margin-left: 30px;">
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">qdssdqdsq </h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#exampleModal">Info</button>      </div>
+            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style="">PA : 4, PD : 1</p></div>        <button type="button" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+        </div>
+      </div>
+      <div class="update" style="width: 100px; margin: 0 auto;">
+        <button type="button" class="btn btn-success">Rafraichir</button>
+      </div>
+    </div>
+</div>
+<div class="container" id="game" style="width: 1268px; display: none;">
+    <br>
+    <body onload="startGame()">
+    </body>
+    
+</div>   
+ <div class="retour" style="width: 100px; margin: 0 auto; display: none;">
+    <button type="button" class="btn btn-danger">Retour</button>
+  </div> 
+</div>
+
+{% endblock %}
+{% include 'dashboard/footer.html' %}
+
+
+

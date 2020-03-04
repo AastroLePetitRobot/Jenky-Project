@@ -36,4 +36,8 @@ urlpatterns = [
     # objectifs
 
     # api objectifs
+    
+    # arene
+    url(r'^dashboard/arene/', login_required(AreneView.as_view())),
+    # api arene
 ]
