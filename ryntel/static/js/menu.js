@@ -108,77 +108,169 @@ $(".attaquer-combat").click(function(){
   $(".ljoueur").hide()
   $("#game").show()
   $(".retour").show()
+  var game = new Phaser.Game(config);
+
 })
 $(".retour").click(function(){
   $(".retour").hide()
   $(".ljoueur").show()
   $("#game").hide()
 })
+var config = {
+  type: Phaser.AUTO,
+  width: 1100,
+  height: 600,
+  parent: 'phaser',
+  scene: {
+      preload: preload,
+      create: create,
+      update: update
+  }
+};
+function preload (){
+  this.load.image('bg', "/static/img/background.png");
+  this.load.image('j1p1' , '/static/img/sprites/personnage_assemblВ/personnage-f1.png')
+  this.load.image('j1p1bis' , '/static/img/sprites/personnage_assemblВ/personnage-f1-bis.png')
+  this.load.image('j1p2' , '/static/img/sprites/personnage_assemblВ/personnage-f2.png')
+  this.load.image('j1p3' , '/static/img/sprites/personnage_assemblВ/personnage-f3.png')
+  this.load.image('j1p4' , '/static/img/sprites/personnage_assemblВ/personnage-f4.png')
 
-var Joueur1;
-var Joueur2;
-var joueur1pos1x = 10, joueur1pos1y = 335
-var joueur2pos1x = 960, joueur2pos1y = 335
-
-
-function startGame() {
-    Joueur1 = new component(128, 256, "/static/img/mc/steve_face.png", joueur1pos1x, joueur1pos1y, "image");
-    Joueur2 = new component(128, 256, "/static/img/mc/steve_face.png", joueur2pos1x, joueur2pos1y, "image");
-    myGameArea.start();
 }
-
-var myGameArea = {
-    canvas : document.createElement("canvas"),
-    start : function() {
-        this.canvas.width = 1100;
-        this.canvas.height = 600;
-        this.context = this.canvas.getContext("2d");
-        document.getElementById("game").appendChild(this.canvas)
-        this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 20);
-        },
-    clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-    stop : function() {
-        clearInterval(this.interval);
-    }
+function formatTime(seconds){
+  // Minutes
+  var minutes = Math.floor(seconds/60);
+  // Seconds
+  var partInSeconds = seconds%60;
+  // Adds left zeros to seconds
+  partInSeconds = partInSeconds.toString().padStart(2,'0');
+  // Returns formated time
+  return `${minutes}:${partInSeconds}`;
 }
-
-function component(width, height, color, x, y, type) {
-    this.type = type;
-    if (type == "image") {
-        this.image = new Image();
-        this.image.src = color;
-        console.log(color)
-    }
-    this.width = width;
-    this.height = height;
-    this.speedX = 0;
-    this.speedY = 0;    
-    this.x = x;
-    this.y = y;    
-    this.update = function() {
-        ctx = myGameArea.context;
-        if (type == "image") {
-            ctx.drawImage(this.image, 
-                this.x, 
-                this.y,
-                this.width, this.height);
-        } else {
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-        }
-    }
-    this.newPos = function() {
-        this.x += this.speedX;
-        this.y += this.speedY;        
-    }
+var progressBox
+var progressBar
+var progressBox2
+var pprogressBox
+var pprogressBar
+var pprogressBox2
+var scorebox
+var score
+var pusername
+var ppusername
+function onEvent ()
+{
+  this.initialTime -= 1; // One second
+  score.setText(formatTime(this.initialTime));
 }
-function updateGameArea() {
-  myGameArea.clear();
-  Joueur1.newPos();
-  Joueur1.update();
-  Joueur2.newPos();
-  Joueur2.update();
+function create (){
+  this.initialTime = 180;
+
+  bg = this.add.image(0, 0, 'bg').setOrigin(0,0);
+  bg.setDisplaySize(config.width,config.height);
+  player = this.add.sprite(100,400,'j1p1').setDisplaySize(341,256)
+  player2 = this.add.sprite(1000,400,'j1p1').setDisplaySize(341,256);
+  player2.flipX = true
+  progressBox2 = this.add.graphics();
+  progressBox = this.add.graphics();
+  progressBar = this.add.graphics();
+  progressBox.fillStyle(0xFF0000, 1);
+  progressBox.fillRect(10, 10, 320, 30);
+  progressBox2.fillStyle(0x222222, 1);
+  progressBox2.fillRect(0, 0, 340, 50);
+  progressBar.clear();
+  progressBar.fillStyle(0x32ea32 , 1);
+  progressBar.fillRect(10, 10, 320 * 1, 30);
+  
+  pprogressBox2 = this.add.graphics();
+  pprogressBox = this.add.graphics();
+  pprogressBar = this.add.graphics();
+  scorebox = this.add.graphics();
+  pprogressBox.fillStyle(0xFF0000, 1);
+  pprogressBox.fillRect(770, 10, 320, 30);
+  pprogressBox2.fillStyle(0x222222, 1);
+  pprogressBox2.fillRect(760, 0, 340, 50);
+  pprogressBar.clear();
+  pprogressBar.fillStyle(0x32ea32 , 1);
+  pprogressBar.fillRect(770, 10, 320 * 1, 30);
+  pprogressBox.fillStyle(0x222222, 1);
+  pprogressBox.fillRect(470, 0, 160, 80);
+  score = this.add.text(510, 25, formatTime(this.initialTime), { fontSize: '32px'});
+  timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
+  pusername = this.add.text(0, 50, "Gauthier", { fontSize: '20px'});
+  ppusername = this.add.text(800, 50, "Thibaut", { fontSize: '20px'});
+  ppusername.x = config.width - ppusername.width;
+
+}
+phase1 = false
+phase2 = false 
+phase3 = false
+phase4 = false
+monte2 = false
+monte=false
+cpt = 0
+function update (){
+  cpt++
+  if(cpt %17==0){
+    if(!monte2){
+      player2.y-=5
+      monte2 = true
+    } else {
+      player2.y+=5
+      monte2=false
+    }
+   
+  }
+  if(cpt%18==0){
+    if(phase4){
+      if(!monte){
+        player.y-=5
+        monte = true
+      } else {
+        player.y+=5
+        monte=false
+      }
+    }
+  }
+
+  if(!phase1){
+    if(player.y > 120){
+      player.setTexture('j1p2')
+      player.x+=12.8
+      player.y-=8
+    } else {
+      player.setTexture('j1p3')
+      player2.setTexture('j1p1bis')
+
+      phase1 = true
+    }
+  } else if(!phase2){
+    if(player.y < 400){
+      player.x+=7
+      player.y+=7
+    } else {
+      player.setTexture('j1p4')
+      console.log("pv")
+      pprogressBar.clear()
+      pprogressBar.fillStyle(0x32ea32 , 1);
+      pprogressBar.fillRect(770, 10, 320 * 0.5, 30);
+      phase2 = true
+    }
+  } else if(!phase3){
+    if(player.y < 450){
+      player.x-=10.5
+      player.y+=2
+    } else {
+      phase3 = true
+      player.setTexture('j1p1')
+      player2.setTexture('j1p1')
+    }
+  } else if(!phase4){
+    if(player.x > 100){
+      player.x-=10
+      player.y-=1
+    } else {
+      phase4 = true
+      player.x = 100
+      player.y = 400
+    }
+  }
 }

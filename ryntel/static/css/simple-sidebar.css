@@ -25,7 +25,6 @@ body{
 }
 canvas {
   border:1px solid rgb(44, 44, 64);
-  background-image: url("/static/img/background.png");
   background-size: cover;
 }
 #menu-toggle{
