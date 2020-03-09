@@ -178,7 +178,6 @@ function create (){
   score = this.add.text(510, 25, formatTime(this.initialTime), { fontSize: '32px'});
   timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
   pusername = this.add.text(0, 50, "{{user.username}}", { fontSize: '20px'});
-  console.log(nomadversaire)
   ppusername = this.add.text(800, 50, nomadversaire, { fontSize: '20px'});
   ppusername.x = config.width - ppusername.width;
   tourjoueur1 = false
