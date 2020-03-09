@@ -107,21 +107,25 @@ class MonJenkyItemEquip(TemplateView):
       if not (stuff.casque >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(casque=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense+Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).pd)
         messages.success(request, 'Le casque a bien été équipé')
     elif typeobjet == 2 : # si c'est une armure
       if not (stuff.armure >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(armure=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense+Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).pd)
         messages.success(request, 'L\'armure a bien été équipée')
     elif typeobjet == 3 : # si c'est un pantalon
       if not (stuff.pantalon >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(pantalon=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense+Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).pd)
         messages.success(request, 'Le pantalon a bien été équipé')
     elif typeobjet == 4 : # si c'est des chaussures
       if not (stuff.chaussures >= 0):
         Equipement.objects.filter(id_id = request.user.id).update(chaussures=inv.objet)
         Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense+Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).pd)
         messages.success(request, 'Les chaussures ont bien été équipées')
     else: 
       messages.error(request, 'Type d\'objet non trouvé')
@@ -149,7 +153,8 @@ class MonJenkyItemDesequipCasque(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('casque') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('casque')).count() == 0:
-        Equipement.objects.filter().update(casque=-1)
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).pd)
+        Equipement.objects.filter(id_id=request.user.id).update(casque=-1)
         Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
@@ -164,6 +169,7 @@ class MonJenkyItemDesequipArmure(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('armure') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('armure')).count() == 0:
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).pd)
         Equipement.objects.filter().update(armure=-1)
         Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
@@ -179,6 +185,7 @@ class MonJenkyItemDesequipPantalon(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('pantalon') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('pantalon')).count() == 0:
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).pd)
         Equipement.objects.filter().update(pantalon=-1)
         Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
@@ -194,6 +201,7 @@ class MonJenkyItemDesequipChaussures(TemplateView):
   def post(self, request, **kwargs):
     if request.POST.get('chaussures') != '-1': # Si l'objet n'est pas nul
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('chaussures')).count() == 0:
+        Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).pd)
         Equipement.objects.filter().update(chaussures=-1)
         Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
