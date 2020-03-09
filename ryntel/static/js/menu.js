@@ -115,6 +115,7 @@ $(".retour").click(function(){
   $(".retour").hide()
   $(".ljoueur").show()
   $("#game").hide()
+  $("#score").hide()
 })
 var config = {
   type: Phaser.AUTO,
@@ -198,16 +199,51 @@ function create (){
   pusername = this.add.text(0, 50, "Gauthier", { fontSize: '20px'});
   ppusername = this.add.text(800, 50, "Thibaut", { fontSize: '20px'});
   ppusername.x = config.width - ppusername.width;
-
+  combat_start = true
+  demarrer_combat(1)
 }
-phase1 = false
-phase2 = false 
-phase3 = false
-phase4 = false
+tourjoueur1 = false
+tourjoueur2 = false
+phase1 = true
+phase2 = true 
+phase3 = true
+phase4 = true
+pphase1 = true
+pphase2 = true
+pphase3 = true
+pphase4 = true
 monte2 = false
 monte=false
+lastplayed = 0
 cpt = 0
+j1hp = 100
+j2hp = 100
+combat_start=false
 function update (){
+  if(j1hp>0 && j2hp>0){
+    if(combat_start){
+      bougerPerso()
+      if(lastplayed == 1 && tourjoueur2){
+        lancer_attaque_j2()
+      } else if(lastplayed == 2 && tourjoueur1) {
+        lancer_attaque_j1()
+        console.log("le joueur 2 joue")
+      }
+      attaquer_perso1()
+      attaquer_perso2()
+    }
+  } else {
+    $("canvas").hide()
+    if(j1hp<= 0){
+      $("#score").text("Le joueur 2 a gagné")
+    } else {
+      $("#score").text("Le joueur 1 a gagné")
+    }
+    $("#score").show()
+  }
+}
+
+function bougerPerso(){
   cpt++
   if(cpt %17==0){
     if(!monte2){
@@ -230,47 +266,146 @@ function update (){
       }
     }
   }
+}
 
-  if(!phase1){
-    if(player.y > 120){
-      player.setTexture('j1p2')
-      player.x+=12.8
-      player.y-=8
-    } else {
-      player.setTexture('j1p3')
-      player2.setTexture('j1p1bis')
+function attaquer_perso1(){
+  if(tourjoueur1){
+    if(!phase1){
+      if(player.y > 120){
+        player.setTexture('j1p2')
+        player.x+=19.2
+        player.y-=12
+      } else {
+        player.setTexture('j1p3')
+        player2.setTexture('j1p1bis')
+  
+        phase1 = true
+      }
+    } else if(!phase2){
+      if(player.y < 400){
+        player.x+=13
+        player.y+=13
+      } else {
+        player.setTexture('j1p4')
+        console.log("pv")
+        j2hp-=10 // on retire 10 hp au joueur 2
+        pprogressBar.clear()
+        pprogressBar.fillStyle(0x32ea32 , 1);
+        pprogressBar.fillRect(770, 10, 320 * (j2hp/100), 30);
+        phase2 = true
+      }
+    } else if(!phase3){
+      if(player.y < 450){
+        player.x-=10.5
+        player.y+=2
+      } else {
+        phase3 = true
+        player.setTexture('j1p1')
+        player2.setTexture('j1p1')
+      }
+    } else if(!phase4){
+      if(player.x > 100){
+        player.x-=10
+        player.y-=1
+      } else {
+        phase4 = true
+        tourjoueur1 = false
+        tourjoueur2 = true
+        console.log("Au tour du joueur 2")
+        lastplayed = 1
+        player.x = 100
+        player.y = 400
+      }
+    }
+  }
+}
 
-      phase1 = true
+function attaquer_perso2(){
+  if(tourjoueur2){
+    if(!pphase1){
+      if(player2.y > 120){
+        player2.setTexture('j1p2')
+        player2.x-=19.2
+        player2.y-=12
+      } else {
+        player2.setTexture('j1p3')
+        player.setTexture('j1p1bis')
+
+        pphase1 = true
+      }
+    } else if(!pphase2){
+      if(player2.y < 400){
+        player2.x-=13
+        player2.y+=13
+      } else {
+        player2.setTexture('j1p4')
+        console.log("pv")
+        j1hp-=10 // on retire 10 hp au joueur 2
+        progressBar.clear()
+        progressBar.fillStyle(0x32ea32 , 1);
+        progressBar.fillRect(10, 10, 320 * (j1hp/100), 30);
+        pphase2 = true
+      }
+    } else if(!pphase3){
+      if(player2.y < 450){
+        player2.x+=10.5
+        player2.y+=2
+      } else {
+        pphase3 = true
+        player2.setTexture('j1p1')
+        player.setTexture('j1p1')
+      }
+    } else if(!pphase4){
+      if(player2.x < 1000){
+        player2.x+=10
+        player2.y-=1
+      } else {
+        pphase4 = true
+        tourjoueur2 = false
+        tourjoueur1 = true
+        console.log("au tour du joueur 1")
+        lastplayed = 2
+        player2.x = 1000
+        player2.y = 400
+      }
     }
-  } else if(!phase2){
-    if(player.y < 400){
-      player.x+=7
-      player.y+=7
-    } else {
-      player.setTexture('j1p4')
-      console.log("pv")
-      pprogressBar.clear()
-      pprogressBar.fillStyle(0x32ea32 , 1);
-      pprogressBar.fillRect(770, 10, 320 * 0.5, 30);
-      phase2 = true
-    }
-  } else if(!phase3){
-    if(player.y < 450){
-      player.x-=10.5
-      player.y+=2
-    } else {
-      phase3 = true
-      player.setTexture('j1p1')
-      player2.setTexture('j1p1')
-    }
-  } else if(!phase4){
-    if(player.x > 100){
-      player.x-=10
-      player.y-=1
-    } else {
-      phase4 = true
-      player.x = 100
-      player.y = 400
-    }
+  }
+}
+
+function lancer_attaque_j1(){
+  if(!tourjoueur2 && tourjoueur1){
+    phase1 = false
+    phase2 = false
+    phase3 = false
+    phase4 = false
+    tourjoueur1 = true
+    lastplayed = 1
+  }
+}
+
+function lancer_attaque_j2(){
+  if(!tourjoueur1 && tourjoueur2){
+  pphase1 = false
+  pphase2 = false
+  pphase3 = false
+  pphase4 = false
+  tourjoueur2 = true
+  lastplayed = 2
+  }
+}
+
+function demarrer_combat(id){
+  if(id == 1){
+    tourjoueur1 = true
+    lancer_attaque_j1()
+    combat_start = true
+    lastplayed = 1
+  } else if(id == 2){
+    tourjoueur2 = true
+    lancer_attaque_j2()
+    combat_start = true
+    lastplayed = 2
+  } else {
+    console.log("Mauvais id")
   }
 }
