@@ -11,7 +11,7 @@
         <div class="modal-dialog" role="document">
         <div class="modal-content" style="margin-top: 45%;">
             <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title"></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="row" style="width: 450px; margin-left: 30px;">
                             <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">{{users.username}}</h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#modalinfo" data-id="{{users.id}}" user="{{users.username}}">Info</button>      </div>
-                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style=""><img class='icones' src='/static/img/icons/atq.png'>{{userscar.attaque}} <img class='icones' src='/static/img/icons/def.png'> {{userscar.defense}} <img class='icones' src='/static/img/icons/acc.png'> {{userscar.precision}} <img class='icones' src='/static/img/icons/spd.png'> {{userscar.vitesse}}</p></div><button type="button" user="{{users.username}}" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style=""><img class='icones' src='/static/img/icons/atq.png'>{{userscar.attaque}} <img class='icones' src='/static/img/icons/def.png'> {{userscar.defense}} <img class='icones' src='/static/img/icons/acc.png'> {{userscar.precision}} <img class='icones' src='/static/img/icons/spd.png'> {{userscar.vitesse}}</p></div><button type="button" user="{{users.username}}" data-id="{{users.id}}" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
                         </div>
                     </div>
                     {% endif %}
@@ -60,25 +60,21 @@
 
 </div>
  <div class="retour" style="width: 100px; margin: 0 auto; display: none;">
-    <button type="button" class="btn btn-danger">Retour</button>
+    <button type="button" class="btn btn-danger" onclick="location.href='/dashboard/arene/'">Retour</button>
   </div> 
 </div>
 <script src="//cdn.jsdelivr.net/npm/phaser@3.22.0/dist/phaser.min.js"></script>
 <script>
+var nomadversaire
 $(".attaquer-combat").click(function(){
   $(".ljoueur").hide()
   $("#game").show()
   $(".retour").show()
   $("#score").hide()
   nomadversaire = $(this).attr("user")
+  idj2 = $(this).attr("data-id")
   var game = new Phaser.Game(config);
 
-})
-$(".retour").click(function(){
-  $(".retour").hide()
-  $(".ljoueur").show()
-  $("#game").hide()
-  $("#score").hide()
 })
 var config = {
   type: Phaser.AUTO,
@@ -116,14 +112,41 @@ var scorebox
 var score
 var pusername
 var ppusername
+var degatj1
+var degatj2
+var joueur2
 function onEvent ()
 {
   this.initialTime -= 1; // One second
   score.setText(formatTime(this.initialTime));
 }
 function create (){
-  this.initialTime = 180;
+    $.ajax({
+        type: 'POST',
+        url : '/dashboard/arene/infouser/',headers: { "X-CSRFToken": getCookie("csrftoken") },
+        data: {'id' : idj2},
+        async: false,
+        success: function(data){
+            joueur2 = data
+        },
+        error: function(data){
+            console.log("erreur");
+        }
+    });
+  if(joueur2.def != 0){
+    degatj2 = ((joueur2.atq*4) / joueur2.def)*10
+  } else {
+    degatj2 = (joueur2.atq*4)*10
+  }
+  if({{caracteristiques.defense}} != 0){
+    degatj1 = (({{caracteristiques.attaque}} *4)/{{caracteristiques.defense}})*10 
+  } else {
+    degatj1 = ({{caracteristiques.attaque}}*4)*10 
+  }
 
+
+  //degatj1 = (({{caracteristiques.attaque}} *4)/{{caracteristiques.defense}})*10  
+  this.initialTime = 180;
   bg = this.add.image(0, 0, 'bg').setOrigin(0,0);
   bg.setDisplaySize(config.width,config.height);
   player = this.add.sprite(100,400,'j1p1').setDisplaySize(341,256)
@@ -156,6 +179,7 @@ function create (){
   score = this.add.text(510, 25, formatTime(this.initialTime), { fontSize: '32px'});
   timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
   pusername = this.add.text(0, 50, "{{user.username}}", { fontSize: '20px'});
+  console.log(nomadversaire)
   ppusername = this.add.text(800, 50, nomadversaire, { fontSize: '20px'});
   ppusername.x = config.width - ppusername.width;
   tourjoueur1 = false
@@ -175,7 +199,11 @@ function create (){
   j1hp = 100
   j2hp = 100
   combat_start = true
-  demarrer_combat(1)
+  if(joueur2.spd > {{caracteristiques.vitesse}}){
+    demarrer_combat(2)
+  } else {
+    demarrer_combat(1)
+  }
 }
 
 function update (){
@@ -192,12 +220,11 @@ function update (){
       attaquer_perso2()
     }
   } else {
-    this.phaserGame.destroy(true);
     $("canvas").hide()
     if(j1hp<= 0){
-      $("#score").text("Le joueur 2 a gagné")
+      $("#score").text("Vous avez perdu.")
     } else {
-      $("#score").text("Le joueur 1 a gagné")
+      $("#score").text("Vous avez gagné.")
     }
     $("#score").show()
   }
@@ -248,7 +275,7 @@ function attaquer_perso1(){
       } else {
         player.setTexture('j1p4')
         console.log("pv")
-        j2hp-=10 // on retire 10 hp au joueur 2
+        j2hp-=degatj2 // on retire 10 hp au joueur 2
         pprogressBar.clear()
         pprogressBar.fillStyle(0x32ea32 , 1);
         pprogressBar.fillRect(770, 10, 320 * (j2hp/100), 30);
@@ -300,7 +327,7 @@ function attaquer_perso2(){
       } else {
         player2.setTexture('j1p4')
         console.log("pv")
-        j1hp-=10 // on retire 10 hp au joueur 2
+        j1hp-=degatj1 // on retire 10 hp au joueur 2
         progressBar.clear()
         progressBar.fillStyle(0x32ea32 , 1);
         progressBar.fillRect(10, 10, 320 * (j1hp/100), 30);
