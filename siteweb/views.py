@@ -9,7 +9,7 @@ from siteweb.models import Objet
 from siteweb.models import Inventaire
 from siteweb.models import Shop
 from siteweb.models import Combat
-
+from PIL import ImageTk, Image
 from django.db.models import Value
 from django.db.models import Max
 from django.db.models.functions import Replace
@@ -20,6 +20,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.http import JsonResponse
 import json
+import os.path
+from django.contrib.staticfiles import finders
+from ryntel.settings import SITE_ROOT
 
 # Create your views here.
 def index(request):
@@ -133,6 +136,23 @@ class MonJenkyItemEquip(TemplateView):
         messages.success(request, 'Les chaussures ont bien été équipées')
     else: 
       messages.error(request, 'Type d\'objet non trouvé')
+    background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+    if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+      casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+      background.paste(casque, (0, 0), casque)
+    if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+      plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+      background.paste(plastron, (0, 0), plastron)
+    if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+      jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+      background.paste(jambiere, (0, 0), jambiere)
+    if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+      chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+      background.paste(chaussures, (0, 0), chaussures)
+    if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+      arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+      background.paste(arme, (0, 0), arme)
+    background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
     return HttpResponseRedirect('/dashboard/monjenky/#inventaire')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -144,6 +164,23 @@ class MonJenkyItemDesequipArme(TemplateView):
         Equipement.objects.filter(id_id=request.user.id).update(arme=-1)
         Caracteristiques.objects.filter(id_id=request.user.id).update(attaque=0)
         Inventaire.objects.create(objet=request.POST.get('arme'), idjoueur_id=request.user.id)
+        background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+        if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+          casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+          background.paste(casque, (0, 0), casque)
+        if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+          plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+          background.paste(plastron, (0, 0), plastron)
+        if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+          jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+          background.paste(jambiere, (0, 0), jambiere)
+        if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+          chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+          background.paste(chaussures, (0, 0), chaussures)
+        if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+          arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+          background.paste(arme, (0, 0), arme)
+        background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -161,6 +198,23 @@ class MonJenkyItemDesequipCasque(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(precision=Caracteristiques.objects.get(id_id=request.user.id).precision-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).pa)
         Equipement.objects.filter(id_id=request.user.id).update(casque=-1)
         Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
+        background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+        if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+          casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+          background.paste(casque, (0, 0), casque)
+        if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+          plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+          background.paste(plastron, (0, 0), plastron)
+        if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+          jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+          background.paste(jambiere, (0, 0), jambiere)
+        if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+          chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+          background.paste(chaussures, (0, 0), chaussures)
+        if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+          arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+          background.paste(arme, (0, 0), arme)
+        background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -177,6 +231,23 @@ class MonJenkyItemDesequipArmure(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).pd)
         Equipement.objects.filter().update(armure=-1)
         Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
+        background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+        if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+          casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+          background.paste(casque, (0, 0), casque)
+        if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+          plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+          background.paste(plastron, (0, 0), plastron)
+        if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+          jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+          background.paste(jambiere, (0, 0), jambiere)
+        if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+          chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+          background.paste(chaussures, (0, 0), chaussures)
+        if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+          arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+          background.paste(arme, (0, 0), arme)
+        background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -193,6 +264,23 @@ class MonJenkyItemDesequipPantalon(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).pd)
         Equipement.objects.filter().update(pantalon=-1)
         Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
+        background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+        if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+          casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+          background.paste(casque, (0, 0), casque)
+        if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+          plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+          background.paste(plastron, (0, 0), plastron)
+        if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+          jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+          background.paste(jambiere, (0, 0), jambiere)
+        if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+          chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+          background.paste(chaussures, (0, 0), chaussures)
+        if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+          arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+          background.paste(arme, (0, 0), arme)
+        background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -210,6 +298,23 @@ class MonJenkyItemDesequipChaussures(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).pd)
         Equipement.objects.filter().update(chaussures=-1)
         Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
+        background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
+        if(Equipement.objects.get(id_id=request.user.id).casque != -1):
+          casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
+          background.paste(casque, (0, 0), casque)
+        if(Equipement.objects.get(id_id=request.user.id).armure != -1):
+          plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
+          background.paste(plastron, (0, 0), plastron)
+        if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
+          jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
+          background.paste(jambiere, (0, 0), jambiere)
+        if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
+          chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
+          background.paste(chaussures, (0, 0), chaussures)
+        if(Equipement.objects.get(id_id=request.user.id).arme != -1):
+          arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
+          background.paste(arme, (0, 0), arme)
+        background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -278,6 +383,7 @@ class ShopView(TemplateView):
       liste_items.append(-1)
     minute = round(((shop.dateupdate + timedelta(hours=1)) - datetime.now(tz=timezone.utc)).total_seconds()/60)
     return render(request, self.template_name, {'shop': shop, 'caracteristiques' : caracteristiques, 'can_update' : can_update, 'liste_items': liste_items, 'minute' :  minute})
+
 
 
 class ShopUpdate(TemplateView):
@@ -396,11 +502,11 @@ class ApiResultArene(TemplateView):
     #fix pour les défenses nulles
     if(pdj2 != 0):
       dgtj2 = ((paj2*4) / pdj1)*10
-    else:
+    else: #dégat brut
       dgtj2 = (paj2*4)*10
     if(pdj1 != 0):
       dgtj1 = ((paj1*4) / pdj2)*10
-    else:
+    else: #dégat brut
       dgtj1 = (paj1*4)*10
     #simulation partie
     hpj1,hpj2 = 100,100
