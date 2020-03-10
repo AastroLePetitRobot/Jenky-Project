@@ -146,12 +146,12 @@ function create (){
         }
     });
   if(joueur2.def != 0){
-    degatj2 = ((joueur2.atq*4) / joueur2.def)*10
+    degatj2 = ((joueur2.atq*4) / {{caracteristiques.defense}})*10
   } else {
     degatj2 = (joueur2.atq*4)*10
   }
   if({{caracteristiques.defense}} != 0){
-    degatj1 = (({{caracteristiques.attaque}} *4)/{{caracteristiques.defense}})*10 
+    degatj1 = (({{caracteristiques.attaque}} *4)/joueur2.def)*10 
   } else {
     degatj1 = ({{caracteristiques.attaque}}*4)*10 
   }

@@ -385,13 +385,44 @@ class ApiInfoHistorique(TemplateView):
 
 class ApiResultArene(TemplateView):
   def post(self, request, **kwargs): # partie pas du tout sécurisé, faut absolument bosser dessus
+    #récupération info joueur
     id_gagnant = int(request.POST.get('vainqueur'))
     id_attaque = int(request.POST.get('attaque'))
     id_defense = int(request.POST.get('defense'))
     nb_gold = int(request.POST.get('golds'))
-    Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold + nb_gold)
-    Caracteristiques.objects.filter(id=id_defense).update(last_attack = datetime.now(tz=timezone.utc))
-    Combat.objects.create(joueur_attaque = User.objects.get(id=id_attaque), joueur_defense = User.objects.get(id=id_defense), gold_obtenu = nb_gold, gagnant = User.objects.get(id=id_gagnant), date_attaque = datetime.now(tz=timezone.utc))
-    return JsonResponse("ok", safe=False)
+    paj1,paj2 = Caracteristiques.objects.get(id_id=id_attaque).attaque,Caracteristiques.objects.get(id_id=id_defense).attaque
+    pdj1,pdj2 = Caracteristiques.objects.get(id_id=id_attaque).defense,Caracteristiques.objects.get(id_id=id_defense).defense
+    spdj1,spdj2 = Caracteristiques.objects.get(id_id=id_attaque).vitesse,Caracteristiques.objects.get(id_id=id_defense).vitesse
+    #fix pour les défenses nulles
+    if(pdj2 != 0):
+      dgtj2 = ((paj2*4) / pdj1)*10
+    else:
+      dgtj2 = (paj2*4)*10
+    if(pdj1 != 0):
+      dgtj1 = ((paj1*4) / pdj2)*10
+    else:
+      dgtj1 = (paj1*4)*10
+    #simulation partie
+    hpj1,hpj2 = 100,100
+    if(spdj2>spdj1):
+      while(hpj1 > 0 and hpj2 > 0):
+        hpj1-=dgtj2
+        hpj2-=dgtj1
+    else:
+      while(hpj1 > 0 and hpj2 > 0):
+        hpj2-=dgtj1
+        hpj1-=dgtj2
+    #récuperation resultat
+    if(hpj1<=0):
+      vainqueur=2
+    else:
+      vainqueur=1
+    if(vainqueur == 1 and id_gagnant == id_attaque or vainqueur == 2 and id_gagnant == id_defense): 
+      Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold + nb_gold)
+      Caracteristiques.objects.filter(id=id_defense).update(last_attack = datetime.now(tz=timezone.utc))
+      Combat.objects.create(joueur_attaque = User.objects.get(id=id_attaque), joueur_defense = User.objects.get(id=id_defense), gold_obtenu = nb_gold, gagnant = User.objects.get(id=id_gagnant), date_attaque = datetime.now(tz=timezone.utc))
+      return HttpResponse(json.dumps("{ok}"), content_type='application/json')
+    else:
+      return HttpResponse(json.dumps("{triche détectée}"), content_type='application/json')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html') 
