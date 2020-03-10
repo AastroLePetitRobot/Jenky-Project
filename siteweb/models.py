@@ -11,6 +11,7 @@ class Caracteristiques(models.Model):
     vitesse = models.IntegerField()
     precision = models.IntegerField()
     effet = models.IntegerField()
+    last_attack = models.DateTimeField()
 
 class Objet(models.Model):
     nom = models.TextField()
@@ -42,3 +43,33 @@ class Shop(models.Model):
     objet5 = models.IntegerField()
     dateupdate = models.DateTimeField()
 
+class Combat(models.Model):
+    joueur_attaque = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=False , related_name="joueur_attaque")
+    joueur_defense = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=False , related_name="joueur_defense")
+    gold_obtenu = models.IntegerField()
+    date_attaque = models.DateTimeField()
+    gagnant = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=False , related_name="joueur_gagnant") 
+
+class Prof(models.Model):
+    id = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=True)
+    nom = models.TextField()
+    prenom = models.TextField()
+    
+class Module(models.Model):
+    nom_module = models.TextField()
+    
+class Etudiant_TP(models.Model):
+    nom_module = models.ForeignKey(Module, to_field='id', on_delete=models.CASCADE, primary_key=False)
+    etudiant = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=False)
+
+class Prof_TP(models.Model):
+    nom_module = models.ForeignKey(Module, to_field='id', on_delete=models.CASCADE, primary_key=False)
+    prof = models.ForeignKey(Prof, to_field='id', on_delete=models.CASCADE, primary_key=False)
+
+class Competence_Module(models.Model):
+    nom_module = models.ForeignKey(Module, to_field='id', on_delete=models.CASCADE, primary_key=False)
+    nom_competence = models.TextField()
+    nombre_exp_gagne = models.IntegerField()
+    etudiant = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE, primary_key=False)
+    valide = models.BooleanField()
+    
