@@ -93,14 +93,26 @@ $(".info-combat").click(function(){
   var username = $(this).attr("user")
   $.ajax({
     type: 'POST',
-    url : '/dashboard/arene/infouser/',headers: { "X-CSRFToken": getCookie("csrftoken") },
+    url : '/dashboard/arene/historique/',headers: { "X-CSRFToken": getCookie("csrftoken") },
     data: {'id' : $(this).attr("data-id")},
     success: function(data){
-        $(".modal-title").text(username)
-        $(".modal-body").html("<p> <img class='icones' src='/static/img/icons/atq.png'> "+data.atq+"</p>"+"<p><img class='icones' src='/static/img/icons/def.png'> "+data.def+"</p>"+"<p><img class='icones' src='/static/img/icons/spd.png'> "+data.spd+"</p>"+"<p><img class='icones' src='/static/img/icons/acc.png'> "+data.acc+"</p>")
+        $(".modal-title").text("Historique de "+username)
+        html_gen = ""
+        for(i=1; i<Object.keys(data).length+1 ; i++){
+          html_gen+="<p>Id:"+data[i].id_match
+          html_gen+="<br>Joueur attaquant:"+data[i].joueur_attaque
+          html_gen+="<br>Joueur défenseur:"+data[i].joueur_defense
+          html_gen+="<br>Gagnant:"+data[i].gagnant+"</p>"
+
+        }
+        $(".modal-body").html(html_gen)
     },
     error: function(data){
         console.log("erreur");
     }
 });
 })
+
+$(function() {
+  $('.tooltip-wrapper').tooltip({position: "top"});
+});

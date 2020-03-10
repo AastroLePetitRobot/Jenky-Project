@@ -8,6 +8,8 @@ from siteweb.models import Equipement
 from siteweb.models import Objet
 from siteweb.models import Inventaire
 from siteweb.models import Shop
+from siteweb.models import Combat
+
 from django.db.models import Value
 from django.db.models import Max
 from django.db.models.functions import Replace
@@ -334,7 +336,14 @@ class AreneView(TemplateView):
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
     listuser = User.objects.all()
     listusercar = Caracteristiques.objects.all()
-    return render(request, self.template_name, {'caracteristiques' : caracteristiques,'listuser': listuser, 'listusercar':listusercar})
+    check_user_attacked = []
+    for user in listuser:
+      if(datetime.now(tz=timezone.utc) < (Caracteristiques.objects.get(id_id=user.id).last_attack + timedelta(hours=1))):
+        check_user_attacked.append({'userid' : user.id, 'update' :False})
+      else:
+        check_user_attacked.append({'userid' : user.id, 'update' :True})
+    print(check_user_attacked)
+    return render(request, self.template_name, {'caracteristiques' : caracteristiques,'listuser': listuser, 'listusercar':listusercar, 'check_user_attacked' : check_user_attacked})
 
 
 class ApiInfoUser(TemplateView):
@@ -351,4 +360,38 @@ class ApiInfoUser(TemplateView):
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html') 
 
-    
+
+class ApiInfoHistorique(TemplateView):
+  def post(self, request, **kwargs):
+    req1=Combat.objects.filter(joueur_attaque=request.POST.get('id'))
+    req2=Combat.objects.filter(joueur_defense=request.POST.get('id'))
+    req = req1 | req2
+    tosend = {}
+    i=0
+    for r in req:
+      subr = {}
+      subr['id_match'] = r.id
+      subr['joueur_attaque'] = r.joueur_attaque.username
+      subr['joueur_defense'] = r.joueur_defense.username
+      subr['gold_obtenu'] = r.gold_obtenu
+      subr['date_attaque'] = r.date_attaque
+      subr['gagnant'] = r.gagnant.username
+      i+=1
+      tosend[i] = subr
+    print(tosend)
+    return JsonResponse(tosend, safe=False)
+  def get(self, request, **kwargs):
+    return render(request, 'layouts/empty.html') 
+
+class ApiResultArene(TemplateView):
+  def post(self, request, **kwargs): # partie pas du tout sécurisé, faut absolument bosser dessus
+    id_gagnant = int(request.POST.get('vainqueur'))
+    id_attaque = int(request.POST.get('attaque'))
+    id_defense = int(request.POST.get('defense'))
+    nb_gold = int(request.POST.get('golds'))
+    Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold + nb_gold)
+    Caracteristiques.objects.filter(id=id_defense).update(last_attack = datetime.now(tz=timezone.utc))
+    Combat.objects.create(joueur_attaque = User.objects.get(id=id_attaque), joueur_defense = User.objects.get(id=id_defense), gold_obtenu = nb_gold, gagnant = User.objects.get(id=id_gagnant), date_attaque = datetime.now(tz=timezone.utc))
+    return JsonResponse("ok", safe=False)
+  def get(self, request, **kwargs):
+    return render(request, 'layouts/empty.html') 

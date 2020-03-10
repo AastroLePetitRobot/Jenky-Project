@@ -8,8 +8,8 @@
 <div class="container" style="width: 600px;">
     <br>
     <div class="modal fade" id="modalinfo" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-        <div class="modal-content" style="margin-top: 45%;">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title"></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -37,7 +37,18 @@
                         </div>
                         <div class="row" style="width: 450px; margin-left: 30px;">
                             <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><h4 style="font-weight:bolder;">{{users.username}}</h4></div>  <button style="width:88px;" type="button" class="btn btn-warning info-combat" data-toggle="modal" data-target="#modalinfo" data-id="{{users.id}}" user="{{users.username}}">Info</button>      </div>
-                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style=""><img class='icones' src='/static/img/icons/atq.png'>{{userscar.attaque}} <img class='icones' src='/static/img/icons/def.png'> {{userscar.defense}} <img class='icones' src='/static/img/icons/acc.png'> {{userscar.precision}} <img class='icones' src='/static/img/icons/spd.png'> {{userscar.vitesse}}</p></div><button type="button" user="{{users.username}}" data-id="{{users.id}}" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+                            <div class="row" style="height: 35px; width: 500px;"> <div style="width: 380px;"><p style=""><img class='icones' src='/static/img/icons/atq.png'>{{userscar.attaque}} <img class='icones' src='/static/img/icons/def.png'> {{userscar.defense}} <img class='icones' src='/static/img/icons/acc.png'> {{userscar.precision}} <img class='icones' src='/static/img/icons/spd.png'> {{userscar.vitesse}}</p></div>
+                            {% for u in check_user_attacked %}
+                              {% if u.userid ==  users.id %}
+                                {% if u.update == False %}
+                                  <div class="tooltip-wrapper disabled" data-title="Veuillez attendre 1h avant chaque attaque">
+                                    <button type="button" user="{{users.username}}" data-id="{{users.id}}" class="btn btn-default btn-primary attaquer-combat" disabled>Attaquer</button>
+                                    </div></div>
+                                {% else %}
+                                <button type="button" user="{{users.username}}" data-id="{{users.id}}" class="btn btn-primary attaquer-combat">Attaquer</button> </div>
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     {% endif %}
@@ -46,7 +57,7 @@
     {% endfor %}
 
       <div class="update" style="width: 100px; margin: 0 auto;">
-        <button type="button" class="btn btn-success">Rafraichir</button>
+        <button type="button" class="btn btn-success" onclick="location.href='/dashboard/arene/'">Rafraichir</button>
       </div>
     </div>
 </div>
@@ -221,12 +232,24 @@ function update (){
   } else {
     $("canvas").hide()
     if(j1hp<= 0){
-      $("#score").text("Vous avez perdu.")
+      $("#score").text("Vous avez perdu. +0 golds")
+      vainqueur = idj2
     } else {
-      $("#score").text("Vous avez gagné.")
+      $("#score").text("Vous avez gagné. +30 golds")
+      vainqueur = {{user.id}}
     }
     $("#score").show()
     game.destroy(true)
+    if(vainqueur == {{user.id}}){
+      golds = 30
+    } else {
+      golds = 0
+    }
+    $.ajax({
+        type: 'POST',
+        url : '/dashboard/arene/fincombat/',headers: { "X-CSRFToken": getCookie("csrftoken") },
+        data: {'vainqueur' : vainqueur, 'attaque' : {{user.id}}, 'defense': idj2, 'golds' : golds}
+      });
   }
 }
 

@@ -3,6 +3,22 @@
  * Copyright 2013-2019 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
  */
+ .tooltip-wrapper {
+  display: inline-block; /* display: block works as well */
+  margin: 0px; /* make some space so the tooltip is visible */
+}
+.bs-tooltip-bottom { 
+  margin-top: 60px; 
+}
+.tooltip-wrapper .btn[disabled] {
+  /* don't let button block mouse events from reaching wrapper */
+  pointer-events: none;
+}
+
+.tooltip-wrapper.disabled {
+  /* OPTIONAL pointer-events setting above blocks cursor setting, so set it here */
+  cursor: not-allowed;
+}
 body{
   overflow-x: hidden;
   background-color: #070720;

@@ -86,12 +86,12 @@
               </div>
             <div class="card" style="width: 18rem; border-color: #2c2c40; height: 330px; margin-top: 20px; border-width: 0px; font-weight: bolder; ">
                 <div class="card-body" style="background-color: rgb(34, 34, 56)">
-                  <p class="card-text">Attaque : {{ arme.pa  }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ arme.pa|add:arme.pa|add:arme.pa }}%" aria-valuenow="{{ arme.pa|add:arme.pa|add:arme.pa }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Attaque : {{ caracteristiques.attaque  }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.attaque }}%" aria-valuenow="{{ caracteristiques.attaque }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div>
                 </p> 
-                  <p class="card-text">Défense : {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}%" aria-valuenow="{{ casque.pd|add:armure.pd|add:pantalon.pd|add:chaussures.pd }}" aria-valuemin="0" aria-valuemax="50"></div>
+                  <p class="card-text">Défense : {{ caracteristiques.defense }}<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.defense }}%" aria-valuenow="{{ caracteristiques.defense }}" aria-valuemin="0" aria-valuemax="50"></div>
                   </div></p>
                   <p class="card-text">Vitesse : {{ caracteristiques.vitesse }}<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: {{ caracteristiques.vitesse }}%" aria-valuenow="{{ caracteristiques.vitesse }}" aria-valuemin="0" aria-valuemax="50"></div>

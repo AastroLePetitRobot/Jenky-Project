@@ -40,6 +40,7 @@ urlpatterns = [
     # arene
     url(r'^dashboard/arene/$', login_required(AreneView.as_view())),
     # api arene
-
+    url(r'^dashboard/arene/historique/$', login_required(ApiInfoHistorique.as_view())),
+    url(r'^dashboard/arene/fincombat/$', login_required(ApiResultArene.as_view())),
     url(r'^dashboard/arene/infouser/$', login_required(ApiInfoUser.as_view())),
 ]
