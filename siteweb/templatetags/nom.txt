@@ -1,5 +1,5 @@
-0 Epée en diamant
-1 Casque en diamant
-2 Torse en diamant
-3 Pantalon en diamant
-4 Bottes en diamant
+0 Epee grise
+1 Bandeau français
+2 T-shirt blanc 
+3 Short bleu
+4 Chaussure rouge

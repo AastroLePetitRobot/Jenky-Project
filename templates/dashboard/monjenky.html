@@ -30,14 +30,22 @@
     </div>
     <div class="container resume" style="margin-top: 20px;">
         <div class="container" style="max-width: 300px; margin-left:0; margin-right: 0; float: left;">
-            <div class="afficher_perso" style="background-repeat: no-repeat; background-size: 150%; background-position: center; background-image: url({%static 'img/sprites/user/' %}{{user.username}}.png)">
+            <div class="afficher_perso" style="background: 
+            url({%static 'img/sprites/view_stuff/' %}{{casque.nom}}.png) no-repeat center center,
+            url({%static 'img/sprites/view_stuff/' %}cheveux-t3.png) no-repeat center center,
+            url({%static 'img/sprites/view_stuff/' %}{{armure.nom}}.png) no-repeat center center,
+            url({%static 'img/sprites/view_stuff/' %}{{pantalon.nom}}.png) no-repeat center center,
+            url({%static 'img/sprites/view_stuff/' %}{{chaussures.nom}}.png) no-repeat center center,
+            url({%static 'img/sprites/view_stuff/' %}homme.png) no-repeat center center
+
+            ;background-size: 400px 300px; ">
             </div>
         </div>
         <div class="container" style="max-width: 150px; float: left; margin-left: 80px; margin-right: 20px;">
             <form method="POST">
               {% csrf_token %}
               <div class="row">
-                <div class="afficher_casque afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 0%; background-image: url({% static "img/sprites/casque/" %}{{casque.nom}}-f1.png);">
+                <div class="afficher_casque afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 0%; background-image: url({% static "img/sprites/preview/" %}{{casque.nom}}-icone.png);">
                   <input name="casque" type="hidden" value="{{casque.id}}">
                   {% if casque.id != -1 %}
                     <button class="close" type="submit" formaction="desequip/casque/"><span aria-hidden="true">&times;</span></button>
@@ -45,7 +53,7 @@
                 </div>
             </div>
             <div class="row">
-              <div class="afficher_torse afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 40%; background-image: url({% static "img/sprites/plastron/" %}{{armure.nom}}-f1.png);">
+              <div class="afficher_torse afficher_stuff" style="background-repeat: no-repeat; background-size: 100%; background-position: 45% 50%; background-image: url({% static "img/sprites/preview/" %}{{armure.nom}}-icone.png);">
                 <input name="armure" type="hidden" value="{{armure.id}}">
                 {% if armure.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/armure/"><span aria-hidden="true">&times;</span></button>
@@ -53,7 +61,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="afficher_pantalon afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 75%; background-image: url({% static "img/sprites/jambiere/" %}{{pantalon.nom}}-f1.png);">
+              <div class="afficher_pantalon afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 75%; background-image: url({% static "img/sprites/preview/" %}{{pantalon.nom}}-icone.png);">
                 <input name="pantalon" type="hidden" value="{{pantalon.id}}">
                 {% if pantalon.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/pantalon/"><span aria-hidden="true">&times;</span></button>
@@ -61,7 +69,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="afficher_chaussures afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 110%; background-image: url({% static "img/sprites/bottes/" %}{{chaussures.nom}}-f1.png);">
+              <div class="afficher_chaussures afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 110%; background-image: url({% static "img/sprites/preview/" %}{{chaussures.nom}}-icone.png);">
                 <input name="chaussures" type="hidden" value="{{chaussures.id}}">
                 {% if chaussures.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/chaussures/"><span aria-hidden="true">&times;</span></button>
@@ -70,7 +78,7 @@
             </div>
         </div>
         <div class="container" style="max-width: 100px; margin-left:20px; margin-top: 125px; margin-right: 40px; float: left;">
-          <div class="afficher_arme afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 67% 20%; background-image: url({% static "img/sprites/epee/" %}{{arme.nom}}-f1.png);">
+          <div class="afficher_arme afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 67% 20%; background-image: url({% static "img/sprites/preview/" %}{{arme.nom}}-icone.png);">
             <input name="arme" type="hidden" value="{{arme.id}}">
             {% if arme.id != -1 %}
               <button class="close" type="submit" formaction="desequip/arme/"><span aria-hidden="true">&times;</span></button>
@@ -114,7 +122,7 @@
           <div class="list-group">
 
               {% for objet in inv %}
-                <a href="#" id="btnobjet{{objet.id}}" class="list-group-item list-group-item-action "><img src="{% static 'img/mc/' %}{{objet.nom}}.png" /> {{ objet.id|get_item }}</a>
+                <a href="#" id="btnobjet{{objet.id}}" class="list-group-item list-group-item-action "><img src="{% static 'img/sprites/preview/' %}{{objet.nom}}.png" /> {{ objet.id|get_item }}</a>
               {% endfor %}
         </div>
       </div>
@@ -219,6 +227,3 @@
     </script>
 {% endblock %}
 {% include 'dashboard/footer.html' %}
-
-
-

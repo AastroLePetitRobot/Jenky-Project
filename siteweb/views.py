@@ -97,22 +97,22 @@ class MonJenkyView(TemplateView):
     try:
       obj = Equipement.objects.get(id_id=request.user.id)
       list.update({'obj' : obj})
-      casque = Objet.objects.get(typeobjet=obj.casque)
+      casque = Objet.objects.get(id=obj.casque)
       list.update({'casque' : casque})
-      armure = Objet.objects.get(typeobjet=obj.armure)
+      armure = Objet.objects.get(id=obj.armure)
       list.update({'armure' : armure})
-      pantalon = Objet.objects.get(typeobjet=obj.pantalon)
+      pantalon = Objet.objects.get(id=obj.pantalon)
       list.update({'pantalon' : pantalon})
-      chaussures = Objet.objects.get(typeobjet=obj.chaussures)
+      chaussures = Objet.objects.get(id=obj.chaussures)
       list.update({'chaussures' : chaussures})
-      arme = Objet.objects.get(typeobjet=obj.arme)
+      arme = Objet.objects.get(id=obj.arme)
       list.update({'arme' : arme})
       idinv = Inventaire.objects.filter(idjoueur_id=request.user.id)
       list.update({'idinv' : idinv})
       inv = Objet.objects.filter(id__in = [objet.objet for objet in idinv] )
       list.update({'inv' : inv})
-    except:
-      print("euh ah oe chaud y'a une erreur")
+    except Exception as e:
+      print("euh ah oe chaud y'a une erreur"+str(e))
     return render(request, self.template_name, list)
 
 class MonJenkyItemVendre(TemplateView):
@@ -166,7 +166,6 @@ class MonJenkyItemEquip(TemplateView):
         messages.success(request, 'Les chaussures ont bien été équipées')
     else: 
       messages.error(request, 'Type d\'objet non trouvé')
-    reload_sprite_profile.reload(request)
     return HttpResponseRedirect('/dashboard/monjenky/#inventaire')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
@@ -178,7 +177,6 @@ class MonJenkyItemDesequipArme(TemplateView):
         Equipement.objects.filter(id_id=request.user.id).update(arme=-1)
         Caracteristiques.objects.filter(id_id=request.user.id).update(attaque=0)
         Inventaire.objects.create(objet=request.POST.get('arme'), idjoueur_id=request.user.id)
-        reload_sprite_profile.reload(request)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -196,7 +194,6 @@ class MonJenkyItemDesequipCasque(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(precision=Caracteristiques.objects.get(id_id=request.user.id).precision-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).pa)
         Equipement.objects.filter(id_id=request.user.id).update(casque=-1)
         Inventaire.objects.create(objet=request.POST.get('casque'), idjoueur_id=request.user.id)
-        reload_sprite_profile.reload(request)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -213,7 +210,6 @@ class MonJenkyItemDesequipArmure(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).pd)
         Equipement.objects.filter().update(armure=-1)
         Inventaire.objects.create(objet=request.POST.get('armure'), idjoueur_id=request.user.id)
-        reload_sprite_profile.reload(request)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -230,7 +226,6 @@ class MonJenkyItemDesequipPantalon(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).pd)
         Equipement.objects.filter().update(pantalon=-1)
         Inventaire.objects.create(objet=request.POST.get('pantalon'), idjoueur_id=request.user.id)
-        reload_sprite_profile.reload(request)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
@@ -248,7 +243,6 @@ class MonJenkyItemDesequipChaussures(TemplateView):
         Caracteristiques.objects.filter(id_id=request.user.id).update(defense=Caracteristiques.objects.get(id_id=request.user.id).defense-Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).pd)
         Equipement.objects.filter().update(chaussures=-1)
         Inventaire.objects.create(objet=request.POST.get('chaussures'), idjoueur_id=request.user.id)
-        reload_sprite_profile.reload(request)
         messages.success(request, 'L\'objet a bien été transféré vers l\'inventaire')
       else:
         messages.error(request, 'Objet déjà dans l\'inventaire')
