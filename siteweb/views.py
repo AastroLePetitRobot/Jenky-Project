@@ -24,6 +24,8 @@ import os.path
 from django.contrib.staticfiles import finders
 from ryntel.settings import SITE_ROOT
 import time
+import requests
+
 class reload_sprite_profile():
   def reload(request):
     start = time.time()
@@ -65,13 +67,29 @@ class LoginView(TemplateView):
   def post(self, request, **kwargs):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
-    user = authenticate(username=username, password=password)
-    if user is not None and user.is_active:
-        login(request, user)
-        messages.success(request, 'Connexion réussie')
-        return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
+    r = requests.post(url = "http://iic0e.univ-littoral.fr/moodle/login/index.php" , data = {'username': username,'password' : password, 'rememberusername':1}, allow_redirects=False) 
+    print(r.status_code)
+    if(r.status_code == 303):
+      user = authenticate(username=username, password=password)
+      if user is not None and user.is_active:
+          login(request, user)
+          messages.success(request, 'Connexion réussie')
+          return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
+      else: #si l'user n'est pas inscrit, on créer un compte
+        user = User.objects.create_user(username, username+"@etu.univ-littoral.fr", password)
+        user.save()
+        print(user.id)
+        car = Caracteristiques(id=User.objects.get(id=user.id),niveau=1, gold=100, attaque=0, defense=0, vitesse=90, precision=90, effet=0, last_attack='2020-01-01')
+        car.save()
+        shop = Shop(id=User.objects.get(id=user.id),objet0=-1, objet1=-1, objet2=-1, objet3=-1 ,objet4=-1, objet5=-1, dateupdate='2020-01-01')
+        shop.save()
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            messages.success(request, 'Votre compte a bien été créer')
+            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
     else:
-      messages.error(request, 'Mauvais mot de passe')
+        messages.error(request, 'Mauvais mot de passe moodle')
     return render(request, self.template_name)
 
 
