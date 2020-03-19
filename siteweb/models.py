@@ -12,6 +12,7 @@ class Caracteristiques(models.Model):
     precision = models.IntegerField()
     effet = models.IntegerField()
     last_attack = models.DateTimeField()
+    exp = models.IntegerField()
 
 class Objet(models.Model):
     nom = models.TextField()

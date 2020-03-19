@@ -89,7 +89,8 @@ DATABASES = {
         'PORT': '',
     }
 }
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_REDIRECT_URL_ETU = '/dashboard/'
+LOGIN_REDIRECT_URL_PROF = '/prof/'
 LOGIN_URL = '/'
 TEMPLATE_DIRS = (
     BASE_DIR + '/templates/',

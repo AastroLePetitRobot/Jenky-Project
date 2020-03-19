@@ -13,34 +13,36 @@ urlpatterns = [
     # api logout
     url(r'^logout/$', LogoutView.as_view()),
     # dashboard
-    url(r'^dashboard/$', login_required(IndexView.as_view())),
+    url(r'^dashboard/$', IndexView.as_view()),
     # monjenky
-    url(r'^dashboard/monjenky/$', login_required(MonJenkyView.as_view())),
+    url(r'^dashboard/monjenky/$', MonJenkyView.as_view()),
     # api monjenky 
-    url(r'^dashboard/monjenky/vendre/$', login_required(MonJenkyItemVendre.as_view())),
-    url(r'^dashboard/monjenky/equip/$', login_required(MonJenkyItemEquip.as_view())),
-    url(r'^dashboard/monjenky/desequip/arme/$', login_required(MonJenkyItemDesequipArme.as_view())),
-    url(r'^dashboard/monjenky/desequip/casque/$', login_required(MonJenkyItemDesequipCasque.as_view())),
-    url(r'^dashboard/monjenky/desequip/armure/$', login_required(MonJenkyItemDesequipArmure.as_view())),
-    url(r'^dashboard/monjenky/desequip/pantalon/$', login_required(MonJenkyItemDesequipPantalon.as_view())),
-    url(r'^dashboard/monjenky/desequip/chaussures/$', login_required(MonJenkyItemDesequipChaussures.as_view())),
+    url(r'^dashboard/monjenky/vendre/$', MonJenkyItemVendre.as_view()),
+    url(r'^dashboard/monjenky/equip/$', MonJenkyItemEquip.as_view()),
+    url(r'^dashboard/monjenky/desequip/arme/$', MonJenkyItemDesequipArme.as_view()),
+    url(r'^dashboard/monjenky/desequip/casque/$', MonJenkyItemDesequipCasque.as_view()),
+    url(r'^dashboard/monjenky/desequip/armure/$', MonJenkyItemDesequipArmure.as_view()),
+    url(r'^dashboard/monjenky/desequip/pantalon/$', MonJenkyItemDesequipPantalon.as_view()),
+    url(r'^dashboard/monjenky/desequip/chaussures/$', MonJenkyItemDesequipChaussures.as_view()),
     # profile
-    url(r'^dashboard/profile/$', login_required(ProfileView.as_view())),
+    url(r'^dashboard/profile/$', ProfileView.as_view()),
     # api profile
-    url(r'^dashboard/profile/update/$', login_required(ProfileUpdate.as_view())),
+    url(r'^dashboard/profile/update/$', ProfileUpdate.as_view()),
     # shop
-    url(r'^dashboard/shop/$', login_required(ShopView.as_view())),
+    url(r'^dashboard/shop/$', ShopView.as_view()),
     # api shop
-    url(r'^dashboard/shop/update/$', login_required(ShopUpdate.as_view())),
-    url(r'^dashboard/shop/to_inventaire/$', login_required(ShopEquip.as_view())),
-    # objectifs
-
-    # api objectifs
-    
+    url(r'^dashboard/shop/update/$', ShopUpdate.as_view()),
+    url(r'^dashboard/shop/to_inventaire/$', ShopEquip.as_view()),
     # arene
-    url(r'^dashboard/arene/$', login_required(AreneView.as_view())),
+    url(r'^dashboard/arene/$', AreneView.as_view()),
     # api arene
-    url(r'^dashboard/arene/historique/$', login_required(ApiInfoHistorique.as_view())),
-    url(r'^dashboard/arene/fincombat/$', login_required(ApiResultArene.as_view())),
-    url(r'^dashboard/arene/infouser/$', login_required(ApiInfoUser.as_view())),
+    url(r'^dashboard/arene/historique/$', ApiInfoHistorique.as_view()),
+    url(r'^dashboard/arene/fincombat/$', ApiResultArene.as_view()),
+    url(r'^dashboard/arene/infouser/$', ApiInfoUser.as_view()),
+    #prof
+    url(r'^proflogin/$', LoginProfView.as_view()),
+    url(r'^prof/$', ProfView.as_view()),
+    #api prof
+    url(r'^prof/api/$', ProfApi.as_view()),
+    url(r'^dashboard/arene/chargecarac/$', ApiChargeSprite.as_view()),
 ]

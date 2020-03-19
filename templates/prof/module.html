@@ -1,0 +1,78 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'prof/header.html' %}
+{% block content %}
+
+<div class="container">
+  <div class="row mb-0">
+    <h1 class="mt-4">Module Java </h1> 
+  </div>
+  <div class="row mb-4 mt-0">
+    <h2 class="mt-4">TPA</h1> 
+  </div>
+  <div class="row" id="tableau">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th>Objectif</th>
+          <th>Point d'expérience</th>
+        </tr>
+      </thead>
+      <tbody style="background-color: aliceblue;">
+        <tr>
+          <th scope="row">1</th>
+            <td><a href='/prof/objectif/' style="color: black;" >Finir DS</a></td>
+            <td>100</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td><a href='/prof/objectif/' style="color: black;" >Finir TPA</a></td>
+          <td>100</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+            <td><a href='/prof/objectif/' style="color: black;" >Finir TPB</a></td>
+            <td>100</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-5" style="padding-left: 290px;">
+        <a class="nav-link" href="#" style="color:white;"><button data-toggle="modal" data-target="#ajoutobjectif" type="button" class="btn" style="color: white; border-color: #2c2c40; background-color:#2c2c40;">Ajouter objectif</button></a> 
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="ajoutobjectif" tabindex="-1" role="dialog" aria-labelledby="ajoutobjectif" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" >Ajouter un objectif</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <form method="post"  role="form" action="/Prof/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="Intitulé Objectif">Intitulé Objectif</label>
+                    <input type="text" name="objectif" placeholder="Objectif" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="experience">Montant expérience</label>
+                    <input type="text" name="experience" placeholder="Experience" class="form-control">
+                </div>
+                <input type="submit" value="Ajouter" class="btn btn-primary"/>
+                </form>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End Modal -->
+{% endblock %}
+{% include 'prof/footer.html' %}

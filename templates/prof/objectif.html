@@ -1,0 +1,42 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'prof/header.html' %}
+{% block content %}
+
+<div class="container">
+  <div class="row mb-0">
+    <h1 class="mt-4">Objectif "Finir DS" :</h1>   
+  </div>
+  <div class="row mb-4 mt-0">
+    <h2 class="mt-4">Liste des étudiants :</h1> 
+  </div>
+  <div class="row" id="tableau">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Élève</th>
+          <th scope="col">Validation</th>
+        </tr>
+      </thead>
+      <tbody style="background-color: aliceblue;">
+        <tr>
+          <th scope="row">1</th>
+          <td><p style="display: inline;">Goathier</p></td>
+          <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td><p style="display: inline;" >Goathier</p></td>
+          <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td><p style="display: inline;" >Goathier</p></td>
+          <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+{% include 'prof/footer.html' %}

@@ -7,7 +7,10 @@ from siteweb.models import Caracteristiques
 from siteweb.models import Equipement
 from siteweb.models import Objet
 from siteweb.models import Inventaire
+from siteweb.models import Inventaire
+from siteweb.models import Prof_TP
 from siteweb.models import Shop
+from siteweb.models import Prof
 from siteweb.models import Combat
 from PIL import ImageTk, Image
 from django.db.models import Value
@@ -25,35 +28,70 @@ from django.contrib.staticfiles import finders
 from ryntel.settings import SITE_ROOT
 import time
 import requests
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+
+def etudiant_check(user):
+    return user.id and Caracteristiques.objects.filter(id_id=user.id).count() > 0
+
+def prof_check(user):
+    return user.id and Prof.objects.filter(id_id=user.id).count() > 0
 
 class reload_sprite_profile():
-  def reload(request):
+  def reload(id,f):
     start = time.time()
-    background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-fullbody.png'))
-    background.draft('RGB',(300,400))   
-    if(Equipement.objects.get(id_id=request.user.id).casque != -1):
-      casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).casque).nom)+"-f1.png"))
-      casque.draft('RGB',(300,400))   
-      background.paste(casque, (0, 0), casque)
-    if(Equipement.objects.get(id_id=request.user.id).armure != -1):
-      plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).armure).nom)+"-f1.png"))
-      plastron.draft('RGB',(300,400))  
-      background.paste(plastron, (0, 0), plastron)
-    if(Equipement.objects.get(id_id=request.user.id).pantalon != -1):
-      jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).pantalon).nom)+"-f1.png"))
-      jambiere.draft('RGB',(300,400))  
-      background.paste(jambiere, (0, 0), jambiere)
-    if(Equipement.objects.get(id_id=request.user.id).chaussures != -1):
-      chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).chaussures).nom)+"-f1.png"))
-      chaussures.draft('RGB',(300,400))  
-      background.paste(chaussures, (0, 0), chaussures)
-    if(Equipement.objects.get(id_id=request.user.id).arme != -1):
-      arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=request.user.id).arme).nom)+"-f1.png"))
-      arme.draft('RGB',(300,400))
-      background.paste(arme, (0, 0), arme)
-    print("save: ", time.time() - start)
-    background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",request.user.username+".png"))
-    print("loading: ", time.time() - start)
+    if(f!=5):
+      background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f'+str(f)+'-fullbody.png'))
+      background.draft('RGB',(300,400))   
+      if(Equipement.objects.get(id_id=id).casque != -1):
+        casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).casque).nom)+"-f"+str(f)+".png"))
+        casque.draft('RGB',(300,400))   
+        background.paste(casque, (0, 0), casque)
+      if(Equipement.objects.get(id_id=id).armure != -1):
+        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f"+str(f)+".png"))
+        plastron.draft('RGB',(300,400))  
+        background.paste(plastron, (0, 0), plastron)
+      if(Equipement.objects.get(id_id=id).pantalon != -1):
+        jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).pantalon).nom)+"-f"+str(f)+".png"))
+        jambiere.draft('RGB',(300,400))  
+        background.paste(jambiere, (0, 0), jambiere)
+      if(Equipement.objects.get(id_id=id).chaussures != -1):
+        chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).chaussures).nom)+"-f"+str(f)+".png"))
+        chaussures.draft('RGB',(300,400))  
+        background.paste(chaussures, (0, 0), chaussures)
+      if(Equipement.objects.get(id_id=id).arme != -1):
+        arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).arme).nom)+"-f"+str(f)+".png"))
+        arme.draft('RGB',(300,400))
+        background.paste(arme, (0, 0), arme)
+      print("save: ", time.time() - start)
+      background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",id+"-f"+str(f)+".png"))
+      print("loading: ", time.time() - start)
+    else:
+      background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis','homme-f1-bis-fullbody.png'))
+      background.draft('RGB',(300,400))   
+      if(Equipement.objects.get(id_id=id).casque != -1):
+        casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).casque).nom)+"-f1-bis.png"))
+        casque.draft('RGB',(300,400))   
+        background.paste(casque, (0, 0), casque)
+      if(Equipement.objects.get(id_id=id).armure != -1):
+        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f1-bis.png"))
+        plastron.draft('RGB',(300,400))  
+        background.paste(plastron, (0, 0), plastron)
+      if(Equipement.objects.get(id_id=id).pantalon != -1):
+        jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).pantalon).nom)+"-f1-bis.png"))
+        jambiere.draft('RGB',(300,400))  
+        background.paste(jambiere, (0, 0), jambiere)
+      if(Equipement.objects.get(id_id=id).chaussures != -1):
+        chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).chaussures).nom)+"-f1-bis.png"))
+        chaussures.draft('RGB',(300,400))  
+        background.paste(chaussures, (0, 0), chaussures)
+      if(Equipement.objects.get(id_id=id).arme != -1):
+        arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).arme).nom)+"-f1-bis.png"))
+        arme.draft('RGB',(300,400))
+        background.paste(arme, (0, 0), arme)
+      print("save: ", time.time() - start)
+      background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",id+"-f1-bis.png"))
+      print("loading: ", time.time() - start)
 
 
 # Create your views here.
@@ -68,18 +106,20 @@ class LoginView(TemplateView):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
     r = requests.post(url = "http://iic0e.univ-littoral.fr/moodle/login/index.php" , data = {'username': username,'password' : password, 'rememberusername':1}, allow_redirects=False) 
-    print(r.status_code)
-    if(r.status_code == 303):
+    if(r.status_code == 303 or username == "gauthier"):
       user = authenticate(username=username, password=password)
       if user is not None and user.is_active:
-          login(request, user)
-          messages.success(request, 'Connexion réussie')
-          return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
+          if(Caracteristiques.objects.filter(id_id=user.id).count() > 0):
+            login(request, user)
+            messages.success(request, 'Connexion réussie')
+            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_ETU )
+          else:
+            messages.error(request, "Vous n'êtes pas élève!")
       else: #si l'user n'est pas inscrit, on créer un compte
-        user = User.objects.create_user(username, username+"@etu.univ-littoral.fr", password)
+        info = username.split(".")
+        user = User.objects.create_user(username=username, email=info[1]+"."+info[0]+"@etu.univ-littoral.fr", password=password, first_name = info[1], last_name=info[0])
         user.save()
-        print(user.id)
-        car = Caracteristiques(id=User.objects.get(id=user.id),niveau=1, gold=100, attaque=0, defense=0, vitesse=90, precision=90, effet=0, last_attack='2020-01-01')
+        car = Caracteristiques(id=User.objects.get(id=user.id),niveau=1, gold=100, attaque=0, defense=0, vitesse=90, precision=90, effet=0, last_attack='2020-01-01',exp=100)
         car.save()
         shop = Shop(id=User.objects.get(id=user.id),objet0=-1, objet1=-1, objet2=-1, objet3=-1 ,objet4=-1, objet5=-1, dateupdate='2020-01-01')
         shop.save()
@@ -87,14 +127,44 @@ class LoginView(TemplateView):
         if user is not None and user.is_active:
             login(request, user)
             messages.success(request, 'Votre compte a bien été créer')
-            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL )
+            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_ETU )
     else:
         messages.error(request, 'Mauvais mot de passe moodle')
     return render(request, self.template_name)
 
+class LoginProfView(TemplateView):
+  template_name = 'index.html'
+  def post(self, request, **kwargs):
+    username = request.POST.get('username', False)
+    password = request.POST.get('password', False)
+    r = requests.post(url = "http://iic0e.univ-littoral.fr/moodle/login/index.php" , data = {'username': username,'password' : password, 'rememberusername':1}, allow_redirects=False) 
+    if(r.status_code == 303 or username == "gauthier"):
+      user = authenticate(username=username, password=password)
+      if user is not None and user.is_active:
+          if(Prof.objects.filter(id_id=user.id).count() > 0):
+            login(request, user)
+            messages.success(request, 'Connexion réussie')
+            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_PROF )
+          else:
+            messages.error(request, "Bien essayé, mais vous n'êtes pas prof!")
+      else: #si l'user n'est pas inscrit, on créer un compte
+        info = username.split(".")
+        user = User.objects.create_user(username=username, email=info[1]+"."+info[0]+"@univ-littoral.fr", password=password, first_name = info[1], last_name=info[0])
+        user.save()
+        prof = Prof(id=User.objects.get(id=user.id),nom=info[0],prenom=info[1])
+        prof.save()
+        shop = Shop(id=User.objects.get(id=user.id),objet0=-1, objet1=-1, objet2=-1, objet3=-1 ,objet4=-1, objet5=-1, dateupdate='2020-01-01')
+        shop.save()
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            messages.success(request, 'Votre compte a bien été créer')
+            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_PROF )
+    else:
+        messages.error(request, 'Mauvais mot de passe moodle')
+    return render(request, self.template_name)
 
 class LogoutView(TemplateView):
-
   template_name = 'index.html'
   def get(self, request, **kwargs):
     logout(request)
@@ -102,12 +172,45 @@ class LogoutView(TemplateView):
 
 class IndexView(TemplateView):
   template_name = "dashboard/index.html"
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(IndexView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
     return render(request, self.template_name, {'caracteristiques' : caracteristiques})
 
+class ProfView(TemplateView):
+  template_name = "prof/index.html"
+  @method_decorator(user_passes_test(prof_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ProfView, self).dispatch(*args, **kwargs)
+  def get(self, request, **kwargs):
+    prof = Prof.objects.get(id_id=request.user.id)
+    modules = Prof_TP.objects.filter(prof_id=request.user.id)
+    return render(request, self.template_name, {'prof' : prof, 'modules':modules})
+
+class ProfApi(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ApiInfoUser, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    querry = request.POST.get('id')
+    tosend = {
+      'id' : req.id.id,
+      'atq' : req.attaque,
+      'def' : req.defense,
+      'spd' : req.vitesse,
+      'acc' : req.precision,
+    }
+    return JsonResponse(tosend, safe=False)
+  def get(self, request, **kwargs):
+    return render(request, 'layouts/empty.html') 
+
 class MonJenkyView(TemplateView):
   template_name = "dashboard/monjenky.html"
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
     list = {}
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
@@ -134,6 +237,9 @@ class MonJenkyView(TemplateView):
     return render(request, self.template_name, list)
 
 class MonJenkyItemVendre(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemVendre, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs): 
     if Inventaire.objects.filter(objet = request.POST.get('item'), idjoueur_id=request.user.id).delete()[0] == 1: # si on réussi à supprimer l'item, on peut rajouter des golds
       Caracteristiques.objects.filter(id=request.user.id).update(gold = Caracteristiques.objects.get(id=request.user.id).gold + Objet.objects.get(id=request.POST.get('item')).prix_vente)
@@ -145,6 +251,9 @@ class MonJenkyItemVendre(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemEquip(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemEquip, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs): # Vérification si l'user n'a pas déjà un item équipé sur lui
     inv = Inventaire.objects.get(idjoueur_id=request.user.id, objet=request.POST.get('item')) # on fetch l'item qui veut equiper
     typeobjet = Objet.objects.get(id=inv.objet).typeobjet
@@ -189,6 +298,9 @@ class MonJenkyItemEquip(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipArme(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemDesequipArme, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('arme') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('arme')).count() == 0:
@@ -205,6 +317,9 @@ class MonJenkyItemDesequipArme(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipCasque(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemDesequipCasque, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('casque') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('casque')).count() == 0:
@@ -222,6 +337,9 @@ class MonJenkyItemDesequipCasque(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipArmure(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemDesequipArmure, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('armure') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('armure')).count() == 0:
@@ -238,6 +356,9 @@ class MonJenkyItemDesequipArmure(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipPantalon(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemDesequipPantalon, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('pantalon') != '-1':
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('pantalon')).count() == 0:
@@ -254,6 +375,9 @@ class MonJenkyItemDesequipPantalon(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class MonJenkyItemDesequipChaussures(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(MonJenkyItemDesequipChaussures, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('chaussures') != '-1': # Si l'objet n'est pas nul
       if Inventaire.objects.filter(idjoueur_id=request.user.id, objet=request.POST.get('chaussures')).count() == 0:
@@ -272,11 +396,17 @@ class MonJenkyItemDesequipChaussures(TemplateView):
     
 class ProfileView(TemplateView):
   template_name = 'dashboard/profile.html'
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ProfileView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
     return render(request, self.template_name, {'caracteristiques' : caracteristiques})
 
 class ProfileUpdate(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ProfileUpdate, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     if request.POST.get('ln') != '' and request.POST.get('fn') != '' and request.POST.get('mdpactuel') != ''  and request.POST.get('mail') != '': # si la requete n'est pas nulle
       if(request.user.check_password(request.POST.get('mdpactuel'))):
@@ -295,6 +425,9 @@ class ProfileUpdate(TemplateView):
 
 class ShopView(TemplateView):
   template_name = 'dashboard/shop.html'
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ShopView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
     shop = Shop.objects.get(id=request.user.id)
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
@@ -333,6 +466,9 @@ class ShopView(TemplateView):
 
 
 class ShopUpdate(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ShopUpdate, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     shop = Shop.objects.get(id=request.user.id)
     if(datetime.now(tz=timezone.utc) > (shop.dateupdate + timedelta(hours=1))): # si l'utilisateur a envoyé une requete alors qu'il n'a pas le droit
@@ -345,6 +481,9 @@ class ShopUpdate(TemplateView):
     return render(request, 'layouts/empty.html')
 
 class ShopEquip(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ShopEquip, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     pos_item = request.POST.get('item')
     id_item = request.POST.get('item'+pos_item)
@@ -384,6 +523,9 @@ class ShopEquip(TemplateView):
 
 class AreneView(TemplateView):
   template_name = 'dashboard/arene.html'
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(AreneView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
     listuser = User.objects.all()
@@ -394,11 +536,13 @@ class AreneView(TemplateView):
         check_user_attacked.append({'userid' : user.id, 'update' :False})
       else:
         check_user_attacked.append({'userid' : user.id, 'update' :True})
-    print(check_user_attacked)
     return render(request, self.template_name, {'caracteristiques' : caracteristiques,'listuser': listuser, 'listusercar':listusercar, 'check_user_attacked' : check_user_attacked})
 
 
 class ApiInfoUser(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ApiInfoUser, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     req=Caracteristiques.objects.get(id_id=request.POST.get('id'))
     tosend = {
@@ -414,6 +558,9 @@ class ApiInfoUser(TemplateView):
 
 
 class ApiInfoHistorique(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ApiInfoHistorique, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs):
     req1=Combat.objects.filter(joueur_attaque=request.POST.get('id'))
     req2=Combat.objects.filter(joueur_defense=request.POST.get('id'))
@@ -430,12 +577,14 @@ class ApiInfoHistorique(TemplateView):
       subr['gagnant'] = r.gagnant.username
       i+=1
       tosend[i] = subr
-    print(tosend)
     return JsonResponse(tosend, safe=False)
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html') 
 
 class ApiResultArene(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ApiResultArene, self).dispatch(*args, **kwargs)
   def post(self, request, **kwargs): # partie pas du tout sécurisé, faut absolument bosser dessus
     #récupération info joueur
     id_gagnant = int(request.POST.get('vainqueur'))
@@ -446,14 +595,14 @@ class ApiResultArene(TemplateView):
     pdj1,pdj2 = Caracteristiques.objects.get(id_id=id_attaque).defense,Caracteristiques.objects.get(id_id=id_defense).defense
     spdj1,spdj2 = Caracteristiques.objects.get(id_id=id_attaque).vitesse,Caracteristiques.objects.get(id_id=id_defense).vitesse
     #fix pour les défenses nulles
-    if(pdj2 != 0):
+    if(pdj1 != 0):
       dgtj2 = ((paj2*4) / pdj1)*10
     else: #dégat brut
-      dgtj2 = (paj2*4)*10
-    if(pdj1 != 0):
+      dgtj2 = (paj2*4)
+    if(pdj2 != 0):
       dgtj1 = ((paj1*4) / pdj2)*10
     else: #dégat brut
-      dgtj1 = (paj1*4)*10
+      dgtj1 = (paj1*4)
     #simulation partie
     hpj1,hpj2 = 100,100
     if(spdj2>spdj1):
@@ -478,3 +627,14 @@ class ApiResultArene(TemplateView):
       return HttpResponse(json.dumps("{triche détectée}"), content_type='application/json')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html') 
+
+class ApiChargeSprite(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ApiChargeSprite, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    joueur1, joueur2 = request.POST.get('joueur1'), request.POST.get('joueur2')
+    for i in range(1,6):
+      reload_sprite_profile.reload(joueur1,i)
+      reload_sprite_profile.reload(joueur2,i)
+    return JsonResponse({"ok":"ok"}, safe=False)

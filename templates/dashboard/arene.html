@@ -67,6 +67,12 @@
 
     
 </div>   
+<div class="container" id="loading" style="width: 1268px; display: none;">
+    <br>
+    <div id="phaser"></div>
+
+    
+</div>  
 <div class"container" id="score" style="width: 1268px; display: none; text-align: center; margin: 0 auto; margin-bottom: 10px;">
 
 </div>
@@ -80,14 +86,72 @@ var nomadversaire
 var game
 $(".attaquer-combat").click(function(){
   $(".ljoueur").hide()
-  $("#game").show()
+  $("#loading").show()
+  $("#game").hide()
   $(".retour").show()
   $("#score").hide()
+  game2 = new Phaser.Game(config2);
   nomadversaire = $(this).attr("user")
   idj2 = $(this).attr("data-id")
-  game = new Phaser.Game(config);
+    $.ajax({
+          type: 'POST',
+          url : '/dashboard/arene/chargecarac/',headers: { "X-CSRFToken": getCookie("csrftoken") },
+          data: {'joueur1' : {{user.id}},
+                'joueur2' : idj2},
+          success: function(data){
+              console.log("Les personnes ont bien étés rafraichi")
+              $("#loading").hide()
+              $("#game").show()
+              game = new Phaser.Game(config);
+
+          },
+          error: function(data){
+              console.log("erreur");
+          }
+  });
 
 })
+var cptblc=0
+var config2 = {
+  type: Phaser.AUTO,
+  width: 1100,
+  height: 600,
+  parent: 'loading',
+  scene: {
+      preload: preload2,
+      create: create2,
+      update: update2
+  }
+};
+var lprogressBar
+var lprogressBox
+function preload2 (){
+   lprogressBar = this.add.graphics();
+   lprogressBox = this.add.graphics();
+  lprogressBox.fillStyle(0x222222, 0.8);
+  lprogressBox.fillRect(240, 270, 640, 50);
+}
+function create2 (){
+  loading = this.add.text(430, 200, "Chargement", { fontSize: '40px'});
+}
+function update2 (){
+  cptblc++
+  if(cptblc==300){
+    loading.setText("Chargement")
+  } else if(cptblc==600){
+    loading.setText("Chargement.")
+  }else if(cptblc==800){
+    loading.setText("Chargement..")
+  }else if(cptblc==1100){
+    loading.setText("Chargement...")
+  }
+  if(cptblc < 1240){
+  lprogressBar.clear();
+  lprogressBar.fillStyle(0xffffff, 1);
+  lprogressBar.fillRect(250, 280, cptblc/2, 30)
+  }
+
+}
 var config = {
   type: Phaser.AUTO,
   width: 1100,
@@ -101,12 +165,16 @@ var config = {
 };
 function preload (){
   this.load.image('bg', "/static/img/background.png");
-  this.load.image('j1p1' , '/static/img/sprites/personnage_assemblВ/personnage-f1.png')
-  this.load.image('j1p1bis' , '/static/img/sprites/personnage_assemblВ/personnage-f1-bis.png')
-  this.load.image('j1p2' , '/static/img/sprites/personnage_assemblВ/personnage-f2.png')
-  this.load.image('j1p3' , '/static/img/sprites/personnage_assemblВ/personnage-f3.png')
-  this.load.image('j1p4' , '/static/img/sprites/personnage_assemblВ/personnage-f4.png')
-
+  this.load.image('j1p1' , '/static/img/sprites/user/'+{{user.id}}+'-f1.png')
+  this.load.image('j1p1bis' , '/static/img/sprites/user/'+{{user.id}}+'-f1-bis.png')
+  this.load.image('j1p2' , '/static/img/sprites/user/'+{{user.id}}+'-f2.png')
+  this.load.image('j1p3' , '/static/img/sprites/user/'+{{user.id}}+'-f3.png')
+  this.load.image('j1p4' , '/static/img/sprites/user/'+{{user.id}}+'-f4.png')
+  this.load.image('j2p1' , '/static/img/sprites/user/'+idj2+'-f1.png')
+  this.load.image('j2p1bis' , '/static/img/sprites/user/'+idj2+'-f1-bis.png')
+  this.load.image('j2p2' , '/static/img/sprites/user/'+idj2+'-f2.png')
+  this.load.image('j2p3' , '/static/img/sprites/user/'+idj2+'-f3.png')
+  this.load.image('j2p4' , '/static/img/sprites/user/'+idj2+'-f4.png')
 }
 function formatTime(seconds){
   var minutes = Math.floor(seconds/60);
@@ -148,21 +216,20 @@ function create (){
   if(joueur2.def != 0){
     degatj2 = ((joueur2.atq*4) / {{caracteristiques.defense}})*10
   } else {
-    degatj2 = (joueur2.atq*4)*10
+    degatj2 = (joueur2.atq*4)
   }
   if({{caracteristiques.defense}} != 0){
     degatj1 = (({{caracteristiques.attaque}} *4)/joueur2.def)*10 
   } else {
-    degatj1 = ({{caracteristiques.attaque}}*4)*10 
+    degatj1 = ({{caracteristiques.attaque}}*4)
   }
-
 
   //degatj1 = (({{caracteristiques.attaque}} *4)/{{caracteristiques.defense}})*10  
   this.initialTime = 180;
   bg = this.add.image(0, 0, 'bg').setOrigin(0,0);
   bg.setDisplaySize(config.width,config.height);
   player = this.add.sprite(100,400,'j1p1').setDisplaySize(341,256)
-  player2 = this.add.sprite(1000,400,'j1p1').setDisplaySize(341,256);
+  player2 = this.add.sprite(1000,400,'j2p1').setDisplaySize(341,256);
   player2.flipX = true
   progressBox2 = this.add.graphics();
   progressBox = this.add.graphics();
@@ -287,8 +354,7 @@ function attaquer_perso1(){
         player.y-=12
       } else {
         player.setTexture('j1p3')
-        player2.setTexture('j1p1bis')
-  
+        player2.setTexture('j2p1bis')
         phase1 = true
       }
     } else if(!phase2){
@@ -311,7 +377,7 @@ function attaquer_perso1(){
       } else {
         phase3 = true
         player.setTexture('j1p1')
-        player2.setTexture('j1p1')
+        player2.setTexture('j2p1')
       }
     } else if(!phase4){
       if(player.x > 100){
@@ -334,11 +400,11 @@ function attaquer_perso2(){
   if(tourjoueur2){
     if(!pphase1){
       if(player2.y > 120){
-        player2.setTexture('j1p2')
+        player2.setTexture('j2p2')
         player2.x-=19.2
         player2.y-=12
       } else {
-        player2.setTexture('j1p3')
+        player2.setTexture('j2p3')
         player.setTexture('j1p1bis')
 
         pphase1 = true
@@ -348,7 +414,7 @@ function attaquer_perso2(){
         player2.x-=13
         player2.y+=13
       } else {
-        player2.setTexture('j1p4')
+        player2.setTexture('j2p4')
         console.log("pv")
         j1hp-=degatj2 // on retire 10 hp au joueur 2
         progressBar.clear()
@@ -362,7 +428,7 @@ function attaquer_perso2(){
         player2.y+=2
       } else {
         pphase3 = true
-        player2.setTexture('j1p1')
+        player2.setTexture('j2p1')
         player.setTexture('j1p1')
       }
     } else if(!pphase4){

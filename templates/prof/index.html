@@ -1,0 +1,40 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'prof/header.html' %}
+{% block content %}
+
+<div class="container">
+  <div class="row mb-4">
+    <h4 class="mt-4">Vos Modules/TP : </h4>   
+  </div>
+  <div class="row" id="tableau">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col"></th>
+          {% for u in modules %}
+          <th scope="col">{{u.nom_module.nom_module}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+<script>
+  $.ajax({
+        type: 'POST',
+        url : '/dashboard/arene/infouser/',headers: { "X-CSRFToken": getCookie("csrftoken") },
+        data: {'id' : idj2},
+        async: false,
+        success: function(data){
+            joueur2 = data
+        },
+        error: function(data){
+            console.log("erreur");
+        }
+    });
+</script>
+{% endblock %}
+{% include 'prof/footer.html' %}

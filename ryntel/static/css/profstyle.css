@@ -1,0 +1,69 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+ .tooltip-wrapper {
+    display: inline-block; /* display: block works as well */
+    margin: 0px; /* make some space so the tooltip is visible */
+  }
+  .bs-tooltip-bottom { 
+    margin-top: 60px; 
+  }
+  .tooltip-wrapper .btn[disabled] {
+    /* don't let button block mouse events from reaching wrapper */
+    pointer-events: none;
+  }
+  
+  .tooltip-wrapper.disabled {
+    /* OPTIONAL pointer-events setting above blocks cursor setting, so set it here */
+    cursor: not-allowed;
+  }
+  body{
+    overflow-x: hidden;
+    background-color: #070720;
+    color: white;
+  }
+  .light{
+    color: black;
+    background-color: white;
+  }
+  #link {
+    color: #bbbedb;
+    background-color: #17172e;
+  }
+  .nav-link {
+    color: #bbbedb!important;
+  }
+  .nav-link:hover{
+    color: white!important;
+  
+  }
+
+
+
+  #link:hover{
+    color: white;
+    background-color: #17172e;
+  }
+  
+  .dark #navbar {
+    background-color: #0b0b23;
+    border-bottom: 1px solid #2c2c40!important;
+  }
+  
+  .modal-content {
+    background-color: #070720;
+  }
+ 
+  .modal-footer {
+    border-color: #2c2c40;
+  }
+  
+  #page-content-wrapper {
+    min-width: 100vw;
+  }
+  
+
+  
+

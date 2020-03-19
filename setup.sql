@@ -18,9 +18,19 @@ insert into siteweb_objet values(12,'plastron-t1',8,0,2,10,5);
 insert into siteweb_objet values(13,'jambiere-t1',5,0,3,10,5);
 insert into siteweb_objet values(14,'bottes-t1',3,10,4,10,5);
 
-insert into siteweb_caracteristiques values(1,50,100,0,0,100,100,0,'2020-01-01');
+insert into siteweb_caracteristiques values(1,50,100,0,0,100,100,0,'2020-01-01',100);
 insert into siteweb_inventaire(objet,idjoueur_id) values (4,1);
 insert into siteweb_inventaire(objet,idjoueur_id) values (0,1);
 insert into siteweb_inventaire(objet,idjoueur_id) values (2,1);
 alter table siteweb_inventaire add constraint cle_unique UNIQUE(objet,idjoueur_id);
 insert into siteweb_shop values(1,0,1,2,3,4,3,CURRENT_TIMESTAMP);
+
+insert into siteweb_module (nom_module) values('Java');
+insert into siteweb_module (nom_module) values('Programmation C');
+insert into siteweb_module (nom_module) values('Developpement Web');
+insert into siteweb_module (nom_module) values('Communication');
+
+insert into siteweb_Etudiant_TP (nom_module_id, etudiant_id) values (1,1);
+insert into siteweb_Prof_TP (nom_module_id, prof_id) values (1,1); /*Faire attention à la id*/
+insert into siteweb_Prof_TP (nom_module_id, prof_id) values (2,1);
+insert into siteweb_Prof_TP (nom_module_id, prof_id) values (3,1);

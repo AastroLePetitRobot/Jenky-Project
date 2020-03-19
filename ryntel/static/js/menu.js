@@ -99,10 +99,10 @@ $(".info-combat").click(function(){
         $(".modal-title").text("Historique de "+username)
         html_gen = ""
         for(i=1; i<Object.keys(data).length+1 ; i++){
-          html_gen+="<p>Id:"+data[i].id_match
-          html_gen+="<br>Joueur attaquant:"+data[i].joueur_attaque
-          html_gen+="<br>Joueur défenseur:"+data[i].joueur_defense
-          html_gen+="<br>Gagnant:"+data[i].gagnant+"</p>"
+          html_gen+="<p>Combat n°: "+data[i].id_match
+          html_gen+="<br>Joueur attaquant: "+data[i].joueur_attaque
+          html_gen+="<br>Joueur défenseur: "+data[i].joueur_defense
+          html_gen+="<br>Gagnant: "+data[i].gagnant+"</p>"
 
         }
         $(".modal-body").html(html_gen)
