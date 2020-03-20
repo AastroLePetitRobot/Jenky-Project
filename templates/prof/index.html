@@ -11,7 +11,7 @@
   </div>
     <ul class="list-group" style="width:600px;">
       {% for u in modules %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">
+      <li class="list-group-item d-flex justify-content-between align-items-center" nom_mod="{{u.nom_module.nom_module}}">
         <a style="color: white;" class="index_module" type="button">{{u.nom_module.nom_module}}</a>
           <span class="badge badge-primary badge-pill">
             {% for i in competence %}
@@ -25,30 +25,29 @@
     </ul>
   </div>
   <div class="container" id="module" style="display: none;">
-    <div class="row mb-4">
-      <h1 class="mt-4" id="module_name">Module Java </h1> 
+    <div class="row mb-4" id="module_titre">
+      
     </div> 
     <div class="row" id="tableau">
-      <table class="table">
-        <thead class="thead-dark">
+      <table class="table table-bordered table_obj">
+        <thead   style="background-color: rgb(23, 23, 46); color: white; border-width:0 px;">
           <tr>
-            <th scope="col">#</th>
-            <th>Objectif</th>
-            <th>Point d'expérience</th>
+            <th style="border-color:rgb(11, 11, 35);">Objectif</th>
+            <th style="border-color:rgb(11, 11, 35);">Point d'expérience</th>
           </tr>
         </thead>
-        <tbody style="background-color: aliceblue;" id="tableau_module_objectif">
+        <tbody style="background-color: rgb(34, 34, 56); color: white;" id="tableau_module_objectif">
           
         </tbody>
       </table>
     </div>
-  
+
     <div class="row mt-0">
       <div class="col">
         <a class="nav-link" href="#" style="color:white;"><button id="module_retour" type="button" class="btn" style="color: white; border-color: #2c2c40; background-color:#2c2c40;">Retour</button></a> 
       </div>
       <div class="col-5" style="padding-left: 290px;">
-          <a class="nav-link" href="#" style="color:white;"><button data-toggle="modal" data-target="#ajoutobjectif" type="button" class="btn" style="color: white; border-color: #2c2c40; background-color:#2c2c40;">Ajouter objectif</button></a> 
+          <a class="nav-link" href="#" style="color:white;"><button data-toggle="modal" data-target="#ajoutobjectif" type="button" class="btn" style="color: white; border-color: #2c2c40; background-color:#2c2c40; " id="button_objectif">Ajouter objectif</button></a> 
       </div>
   </div>
   <!-- Modal -->
@@ -62,53 +61,40 @@
           </button>
           </div>
           <div class="modal-body">
-              <form method="post"  role="form" action="/Prof/">
+              <div id="form_ajout">
                   {% csrf_token %}
                   <div class="form-group">
-                      <label for="Intitulé Objectif">Intitulé Objectif</label>
-                      <input type="text" name="objectif" placeholder="Objectif" class="form-control">
+                      <label for="objectif">Intitulé Objectif</label>
+                      <input class="obj" type="text" name="objectif" placeholder="Objectif" class="form-control">
                     </div>
                     <div class="form-group">
                       <label for="experience">Montant expérience</label>
-                      <input type="text" name="experience" placeholder="Experience" class="form-control">
+                      <input class="xp" type="text" name="experience" placeholder="Experience" class="form-control">
                   </div>
-                  <input type="submit" value="Ajouter" class="btn btn-primary"/>
-                  </form>
+                  <button class="ajouter_objectif btn btn-primary" value="Ajouter" >Ajouter</button>
+                </div>
           </div>
       </div>
       </div>
   </div>
   </div>
   <div class="container" id="objectif" style="display: none;">
-    <div class="row mb-0">
-      <h1 class="mt-4">Objectif "Finir DS" :</h1>   
+    <div class="row mb-0" id='objectif_titre'>
+       
     </div>
     <div class="row mb-4 mt-0">
       <h2 class="mt-4">Liste des étudiants :</h1> 
     </div>
     <div class="row" id="tableau">
-      <table class="table">
-        <thead class="thead-dark">
+      <table class="table table-bordered">
+        <thead class="table table_etudiant">
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Élève</th>
-            <th scope="col">Validation</th>
+            <th scope="col" style="color: white; background-color: rgb(23, 23, 46); border-color: rgb(11, 11, 35);">Élève</th>
+            <th scope="col" style="color: white; background-color: rgb(23, 23, 46); border-color: rgb(11, 11, 35);">Validation</th>
           </tr>
         </thead>
-        <tbody style="background-color: aliceblue;">
-          <tr>
-            <th scope="row">1</th>
-            <td><p style="display: inline;">Goathier</p></td>
-            <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>        </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td><p style="display: inline;" >Goathier</p></td>
-            <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>        </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td><p style="display: inline;" >Goathier</p></td>
-            <td><a><img src="{% static 'Icon/Valider.svg' %}" height="24" width="24" style="margin-right: 20px;"></a><a><img src="{% static 'Icon/Refuser.svg' %}"height="24" width="24"></a></td>
-          </tr>
+        <tbody style="background-color: aliceblue;" id="objectif_eleve">
+          
         </tbody>
       </table>
       <div class="row mt-0">
@@ -117,50 +103,124 @@
         </div>
       </div>
     </div>
-{% endblock %}
-{% include 'prof/footer.html' %}
+
 
 
 <script>
+$(document).ready(function() {
         $('.index_module').click(function(event){
           $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'module'},   success: f});
-        }); 
+        });
         
+        $('.module_objectif').click(function(event){ 
+          $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
+        });
         
-       
         $('#module_retour').click(function(event){ 
           $('#tableau_module_objectif').empty()
+          $('#module_titre').empty()
           $( '#module' ).css( "display","none" );
           $( '#index' ).css( "display","block" );
-          //$.ajax({ type: 'POST', url: 'ajax.php', data: { texte:$("input").val() }, success: console.log("test") })
         });
         
         $('#objectif_retour').click(function(event){ 
+          $('#objectif_eleve').empty()
+          $('#objectif_titre').empty()
           $( '#objectif' ).css( "display","none" );
           $( '#module' ).css( "display","block" );
-          //$.ajax({ type: 'POST', url: 'ajax.php', data: { texte:$("input").val() }, success: console.log("test") })
         });
+          $(".ajouter_objectif").click(function(){
+            $.ajax({ type: 'POST', url: '/prof/AjoutObjectif/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { module:$('#module_name').text().replace("Module ",""), objectif:$(".obj").val(), experience:$(".xp").val()},   success: function(data){
+              $('.modal').modal('toggle');
+              $('.table_obj').append('<tr><td style="border-color:rgb(11, 11, 35);"><a class="module_objectif" type="button" style="color: white;">'+$(".obj").val()+'</a></td><td style="border-color:rgb(11, 11, 35);">'+$(".xp").val()+'</td></tr>');
+              nb = (parseInt(($("li[nom_mod='"+($('#module_name').text()).replace("Module ","")+"'] span").text()).replace(" objectifs","").replace(" objectif",""))+1)
+              if(nb>1){
+                nb+= " objectifs"
+              } else {
+                nb+= " objectif"
+              }
+              $("li[nom_mod='"+$('#module_name').text().replace("Module ","")+"'] span").html(nb)
+              $("html").append('<div class="alert alert-success alert-dismissible fade show alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Succès :</strong> L\'objectif a bien été ajouté</div>')
+              $(".alert-success").fadeTo(2000, 100).slideUp(500, function(){
+                $(".alert-success").slideUp(500);
+              });
+              $('.module_objectif').click(function(event){ 
+                $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
+               });
+            },
+            error: function(data){
+              $('.modal').modal('toggle');
+              $("html").append('<div class="alert alert-danger alert-dismissible fade show alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Succès :</strong> Erreur d\'ajout</div>')
+              $(".alert-danger").fadeTo(2000, 100).slideUp(500, function(){
+                $(".alert-danger").slideUp(500);
+              });
+            }
+          });
+          })
         function f(data){
             $( '#index' ).css( "display","none" );
             $( '#module' ).css( "display","block" );
-            console.log(data)
-            data.objectif.forEach(element => {
-              $var = '<tr><th scope="row">'+element[0]+'</th>'+ 
-              '<td>'+
-                '<a class="module_objectif" type="button" style="color: black;" >'+element[1]+'</a>'+
-              '</td>'+
-              '<td>'+element[2]+'</td>'+
-              '</tr>'
-              $('#tableau_module_objectif').append($var)
-            });   
-               $('.module_objectif').click(function(event){ 
-                console.log('test')
-                $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
+            if(data.objectif.length != 0){
+
+              data.objectif.forEach(element => {
+                $var = '<tr><td style="border-color:rgb(11, 11, 35);">'+
+                  '<a class="module_objectif" type="button" >'+element[0]+'</a>'+
+                '</td>'+
+                '<td style="border-color:rgb(11, 11, 35);">'+element[1]+'</td>'+
+                '</tr>'
+                $('#tableau_module_objectif').append($var)
               });
-        
+            } else {
+              console.log("Aucun objectif trouvé")
+
             }
+            $("#module_titre").append('<h1 class="mt-4" id="module_name">Module '+data.nom_module+'</h1>' )
+            $('#button_objectif').click(function(event){
+              $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$('#module_name').text().replace("Module ",""), toDownload:'module'},   success: f2});
+            });   
+            $('.module_objectif').click(function(event){ 
+            $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
+           });
+           
+          }
+        function f2(data){
+          $('#form_ajout').append('<div class="form-group">'+
+                      '<input type="hidden" value="'+data.nom_module+'" name="module" placeholder="module" class="form-control">'+
+                      '</div>')
+
+        }
         function f1(data){
             $( '#module' ).css( "display","none" );
-            $( '#objectif' ).css( "display","block" );  
+            $( '#objectif' ).css( "display","block" );
+            i=0  
+            $('#objectif_eleve').empty()
+            data.etudiant.forEach(element => {
+            if(element[2]){
+              $var1='<tr><td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><p style="display: inline; color: white;">'+element[0]+ " " + element[1]+'</p></td >'+
+              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Valider.svg" %}" height="24" width="24" style="margin-right: 20px;"></a></td>        </tr>'+
+              '<tr>';
+              $('#objectif_eleve').append($var1)
+
+            } else {
+              $var1='<tr><td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><p style="display: inline; color: white;">'+element[0]+ " " + element[1]+'</p></td >'+
+              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Refuser.svg" %}"height="24" width="24"></a></td>        </tr>'+
+              '<tr>';
+              $('#objectif_eleve').append($var1)
+            }
+            });
+              $(".valider").click(function(){
+                if($(this).html() == '<img src="/static/Icon/Valider.svg" height="24" width="24">'){
+                  $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { obj: data.nom_objectif, name:$(this).attr("name"), toDownload:'refuser'}});
+                  $(this).html('<img src="/static/Icon/Refuser.svg" height="24" width="24">')
+                } else {
+                  $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { obj: data.nom_objectif, name:$(this).attr("name"), toDownload:'valider'}});
+                  $(this).html('<img src="/static/Icon/Valider.svg" height="24" width="24">')
+                }
+              })
+            $('#objectif_titre').empty()
+            $('#objectif_titre').append('<h1 class="mt-4">Objectif '+ data.nom_objectif+':</h1>' )
           } 
+        });
 </script>
+{% endblock %}
+{% include 'prof/footer.html' %}

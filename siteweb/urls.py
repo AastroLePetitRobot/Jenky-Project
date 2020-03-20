@@ -45,4 +45,7 @@ urlpatterns = [
     #api prof
     url(r'^dashboard/arene/chargecarac/$', ApiChargeSprite.as_view()),
     url(r'^prof/ApiProf/$',ApiProf.as_view()),
+    url(r'^prof/AjoutObjectif/$',AjouterObjectif.as_view()),
+    url(r'^prof/profile/$',ProfilProf.as_view()),
+    url(r'^prof/profile/update/$', ProfileProfUpdate.as_view()),
 ]

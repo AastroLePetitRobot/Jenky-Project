@@ -11,6 +11,7 @@ from siteweb.models import Inventaire
 from siteweb.models import Prof_TP
 from siteweb.models import Shop
 from siteweb.models import Competence_Module
+from siteweb.models import Etudiant_TP
 from siteweb.models import Module
 from siteweb.models import Prof
 from siteweb.models import Combat
@@ -114,7 +115,7 @@ class LoginView(TemplateView):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
     r = requests.post(url = "http://iic0e.univ-littoral.fr/moodle/login/index.php" , data = {'username': username,'password' : password, 'rememberusername':1}, allow_redirects=False) 
-    if(r.status_code == 303 or username == "gauthier"):
+    if(r.status_code == 303):
       user = authenticate(username=username, password=password)
       if user is not None and user.is_active:
           if(Caracteristiques.objects.filter(id_id=user.id).count() > 0):
@@ -126,6 +127,8 @@ class LoginView(TemplateView):
       else: #si l'user n'est pas inscrit, on créer un compte
         info = username.split(".")
         user = User.objects.create_user(username=username, email=info[1]+"."+info[0]+"@etu.univ-littoral.fr", password=password, first_name = info[1], last_name=info[0])
+        user.save()
+        user = User.objects.create_user(username=username, email=username+"@etu.univ-littoral.fr", password=password)
         user.save()
         car = Caracteristiques(id=User.objects.get(id=user.id),niveau=1, gold=100, attaque=0, defense=0, vitesse=90, precision=90, effet=0, last_attack='2020-01-01',exp=100)
         car.save()
@@ -146,7 +149,7 @@ class LoginProfView(TemplateView):
     username = request.POST.get('username', False)
     password = request.POST.get('password', False)
     r = requests.post(url = "http://iic0e.univ-littoral.fr/moodle/login/index.php" , data = {'username': username,'password' : password, 'rememberusername':1}, allow_redirects=False) 
-    if(r.status_code == 303 or username == "gauthier"):
+    if(r.status_code == 303):
       user = authenticate(username=username, password=password)
       if user is not None and user.is_active:
           if(Prof.objects.filter(id_id=user.id).count() > 0):
@@ -154,20 +157,9 @@ class LoginProfView(TemplateView):
             messages.success(request, 'Connexion réussie')
             return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_PROF )
           else:
-            messages.error(request, "Bien essayé, mais vous n'êtes pas prof!")
+            messages.error(request, "Bien essayé, mais vous n'êtes pas prof")
       else: #si l'user n'est pas inscrit, on créer un compte
-        info = username.split(".")
-        user = User.objects.create_user(username=username, email=info[1]+"."+info[0]+"@univ-littoral.fr", password=password, first_name = info[1], last_name=info[0])
-        user.save()
-        prof = Prof(id=User.objects.get(id=user.id),nom=info[0],prenom=info[1])
-        prof.save()
-        shop = Shop(id=User.objects.get(id=user.id),objet0=-1, objet1=-1, objet2=-1, objet3=-1 ,objet4=-1, objet5=-1, dateupdate='2020-01-01')
-        shop.save()
-        user = authenticate(username=username, password=password)
-        if user is not None and user.is_active:
-            login(request, user)
-            messages.success(request, 'Votre compte a bien été créer')
-            return HttpResponseRedirect( settings.LOGIN_REDIRECT_URL_PROF )
+        messages.error(request, "Votre compte prof n'est pas actif sur Jenky, veuillez contacter un administrateur")
     else:
         messages.error(request, 'Mauvais mot de passe moodle')
     return render(request, self.template_name)
@@ -194,29 +186,69 @@ class ProfView(TemplateView):
     competence=[]
     for i in modules:
       print(i.nom_module_id)
-      competence.append([i.id,Competence_Module.objects.filter(nom_module_id=i.nom_module_id).count()])
+      competence.append([i.id,Competence_Module.objects.filter(nom_module_id=i.nom_module_id).distinct("nom_competence").count()])
     return render(request, 'prof/index.html', {'modules':modules,'competence':competence,'objectif':objectif}) 
 
 class ApiProf(TemplateView):
- def post(self, request, **kwargs):
-  print('cacatest')
-  if request.POST.get('toDownload') == 'module':
-    print('caca')
-    print (request.POST.get('valeur'))
-    module = Module.objects.get(nom_module=request.POST.get('valeur'))
-    objectif = Competence_Module.objects.filter(nom_module_id=module.id)
-    objectifs=[]
-    for i in objectif:
-      objectifs.append([i.id,i.nom_competence,i.nombre_exp_gagne])
-    tosend = {
-      'objectif' : objectifs,
-      'nom_module' : module.nom_module,
-    }
-  if request.POST.get('toDownload') == 'objectif':
-    print("Caca")
-  return JsonResponse(tosend, safe=False)
+  @method_decorator(user_passes_test(prof_check))
+  def dispatch(self, *args, **kwargs):
+    return super(ApiProf, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    if request.POST.get('toDownload') == 'module':
+      print (request.POST.get('valeur'))
+      module = Module.objects.get(nom_module=request.POST.get('valeur'))
+      objectif = Competence_Module.objects.filter(nom_module_id=module.id)
+      objectifs=[]
+      for i in objectif:
+        if([i.nom_competence,i.nombre_exp_gagne] not in objectifs):
+          objectifs.append([i.nom_competence,i.nombre_exp_gagne])
+      tosend = {
+        'objectif' : objectifs,
+        'nom_module' : module.nom_module,
+      }
+    elif request.POST.get('toDownload') == 'objectif':
+      objectif=Competence_Module.objects.filter(nom_competence=request.POST.get('valeur'))
+      etudiant=[]
+      for i in objectif:
+        nom_etu = User.objects.get(id=i.etudiant_id).last_name
+        prenom_etu = User.objects.get(id=i.etudiant_id).first_name
+        etudiant.append([nom_etu,prenom_etu,i.valide])
+      tosend = {
+        'nom_objectif' : request.POST.get('valeur'),
+        'etudiant' : etudiant,
+      }
+    elif request.POST.get('toDownload') == 'valider':
+      objectif = request.POST.get('obj')
+      last_name = request.POST.get('name').split('.')[0]
+      first_name = request.POST.get('name').split('.')[1]
+      us = User.objects.get(first_name = first_name, last_name=last_name)
+      Competence_Module.objects.filter(nom_competence=objectif,etudiant_id=us.id).update(valide=True)
+      tosend={'ok':'ok'}
+    elif request.POST.get('toDownload') == 'refuser':
+      objectif = request.POST.get('obj')
+      last_name = request.POST.get('name').split('.')[0]
+      first_name = request.POST.get('name').split('.')[1]
+      us = User.objects.get(first_name = first_name, last_name=last_name)
+      Competence_Module.objects.filter(nom_competence=objectif,etudiant_id=us.id).update(valide=False)
+      tosend={'ok':'ok'}
+    return JsonResponse(tosend, safe=False)
   def get(self, request, **kwargs):
     return render(request, 'dashboardProf/empty.html') 
+
+class AjouterObjectif(TemplateView):
+  @method_decorator(user_passes_test(prof_check))
+  def dispatch(self, *args, **kwargs):
+        return super(AjouterObjectif, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    objectif = request.POST.get('objectif')
+    experience = request.POST.get('experience')
+    module = request.POST.get('module')
+    etudiant = Etudiant_TP.objects.filter(nom_module_id=Module.objects.get(nom_module=module).id)
+    to_send = []
+    for i in etudiant:
+      ajoutBDD = Competence_Module(nom_competence=objectif,nombre_exp_gagne=experience,valide=False,etudiant_id=i.etudiant_id,nom_module_id=Module.objects.get(nom_module=module).id)
+      ajoutBDD.save()
+    return JsonResponse("{'ok':'ok'}", safe=False)
 
 class MonJenkyView(TemplateView):
   template_name = "dashboard/monjenky.html"
@@ -415,6 +447,14 @@ class ProfileView(TemplateView):
     caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
     return render(request, self.template_name, {'caracteristiques' : caracteristiques})
 
+class ProfilProf(TemplateView):
+  template_name = 'prof/profile.html'
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ProfilProf, self).dispatch(*args, **kwargs)
+  def get(self, request, **kwargs):
+    return render(request, self.template_name)
+
 class ProfileUpdate(TemplateView):
   @method_decorator(user_passes_test(etudiant_check))
   def dispatch(self, *args, **kwargs):
@@ -432,6 +472,27 @@ class ProfileUpdate(TemplateView):
     else:
       messages.error(request, 'Veuillez remplir tous les champs !')
     return HttpResponseRedirect('/dashboard/profile/')
+  def get(self, request, **kwargs):
+    return render(request, 'layouts/empty.html')
+
+
+class ProfileProfUpdate(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+        return super(ProfileProfUpdate, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    if request.POST.get('ln') != '' and request.POST.get('fn') != '' and request.POST.get('mdpactuel') != ''  and request.POST.get('mail') != '': # si la requete n'est pas nulle
+      if(request.user.check_password(request.POST.get('mdpactuel'))):
+        User.objects.filter(id=request.user.id).update(email = request.POST.get('mail'), first_name = request.POST.get('fn'), last_name = request.POST.get('ln'))
+        if(request.POST.get('mdpnouveau') != ''):
+          request.user.set_password(request.POST.get('mdpnouveau'))
+          request.user.save()
+        messages.success(request, 'Profil bien mis à jour')
+      else:
+        messages.error(request, 'Mauvais mot de passe fourni')
+    else:
+      messages.error(request, 'Veuillez remplir tous les champs !')
+    return HttpResponseRedirect('/prof/profile/')
   def get(self, request, **kwargs):
     return render(request, 'layouts/empty.html')
 
