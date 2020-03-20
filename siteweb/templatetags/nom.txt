@@ -1,5 +1,16 @@
-0 Epee grise
-1 Bandeau français
-2 T-shirt blanc 
-3 Short bleu
-4 Chaussure rouge
+10 Epee grise
+11 Bandeau français
+12 T-shirt blanc 
+13 Short bleu
+14 Chaussure rouge
+6 Bandeau belge
+7 T-shirt gris
+12 Short bordeaux
+8 Short rouge
+9 Chaussure grise
+1 Lunette zoom
+2 Costume bleu 
+3 Jean bleu 
+4 Geta
+5 Epee rouge
+0 Hache en pierre

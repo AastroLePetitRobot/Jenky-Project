@@ -8,8 +8,33 @@
 <div class="container">
     <div class="row">
         <div class="profil-picture">
-            <div class="centered">{{ caracteristiques.niveau }}</div>
-            <img style="border-radius: 50%; border-style: solid; border-color: #2888f6; width: 150px;" src="{% static 'img/male.png' %}" alt="Avatar">
+            <div style="
+            border: 0px solid;
+            border-radius: 100%;
+            height: 150px;
+            width: 150px;
+            border-top-color: transparent;
+              background: url({% static 'img/male.png' %}) center/cover;
+            " alt="Avatar">
+            <svg
+   class="progress-ring"
+   width="150"
+   height="150">
+  <circle
+    style="transition: 0.35s stroke-dashoffset;
+          transform: rotate(-90deg);
+          transform-origin: 50% 50%;"
+    stroke="#98e2fb"
+    stroke-width="3"
+    fill="transparent"
+    r="73.7"
+    cx="75"
+    cy="75"/>
+</svg>
+          </div>
+
+          <div class="centered">{{ caracteristiques.niveau }}</div>
+
         </div>
         <h1 style="font-weight:bolder; margin-top: 50px; margin-left: 20px;">{{ user.username }} </h1>
         
@@ -45,7 +70,7 @@
             <form method="POST">
               {% csrf_token %}
               <div class="row">
-                <div class="afficher_casque afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 0%; background-image: url({% static "img/sprites/preview/" %}{{casque.nom}}-icone.png);">
+                <div class="afficher_casque afficher_stuff" style="background-repeat: no-repeat; background-size: 100%; background-position: 45% 0%; background-image: url({% static "img/sprites/preview/" %}{{casque.nom}}-icone.png);">
                   <input name="casque" type="hidden" value="{{casque.id}}">
                   {% if casque.id != -1 %}
                     <button class="close" type="submit" formaction="desequip/casque/"><span aria-hidden="true">&times;</span></button>
@@ -53,7 +78,7 @@
                 </div>
             </div>
             <div class="row">
-              <div class="afficher_torse afficher_stuff" style="background-repeat: no-repeat; background-size: 100%; background-position: 45% 50%; background-image: url({% static "img/sprites/preview/" %}{{armure.nom}}-icone.png);">
+              <div class="afficher_torse afficher_stuff" style="background-repeat: no-repeat; background-size: 60%; background-position: 45% 50%; background-image: url({% static "img/sprites/preview/" %}{{armure.nom}}-icone.png);">
                 <input name="armure" type="hidden" value="{{armure.id}}">
                 {% if armure.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/armure/"><span aria-hidden="true">&times;</span></button>
@@ -61,7 +86,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="afficher_pantalon afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 75%; background-image: url({% static "img/sprites/preview/" %}{{pantalon.nom}}-icone.png);">
+              <div class="afficher_pantalon afficher_stuff" style="background-repeat: no-repeat; background-size: 80%; background-position: 45% 75%; background-image: url({% static "img/sprites/preview/" %}{{pantalon.nom}}-icone.png);">
                 <input name="pantalon" type="hidden" value="{{pantalon.id}}">
                 {% if pantalon.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/pantalon/"><span aria-hidden="true">&times;</span></button>
@@ -69,7 +94,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="afficher_chaussures afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 45% 110%; background-image: url({% static "img/sprites/preview/" %}{{chaussures.nom}}-icone.png);">
+              <div class="afficher_chaussures afficher_stuff" style="background-repeat: no-repeat; background-size: 100%; background-position: 45% 110%; background-image: url({% static "img/sprites/preview/" %}{{chaussures.nom}}-icone.png);">
                 <input name="chaussures" type="hidden" value="{{chaussures.id}}">
                 {% if chaussures.id != -1 %}
                   <button class="close" type="submit" formaction="desequip/chaussures/"><span aria-hidden="true">&times;</span></button>
@@ -78,7 +103,7 @@
             </div>
         </div>
         <div class="container" style="max-width: 100px; margin-left:20px; margin-top: 125px; margin-right: 40px; float: left;">
-          <div class="afficher_arme afficher_stuff" style="background-repeat: no-repeat; background-size: 250%; background-position: 67% 20%; background-image: url({% static "img/sprites/preview/" %}{{arme.nom}}-icone.png);">
+          <div class="afficher_arme afficher_stuff" style="background-repeat: no-repeat; background-size: 100%; background-position: 67% 20%; background-image: url({% static "img/sprites/preview/" %}{{arme.nom}}-icone.png);">
             <input name="arme" type="hidden" value="{{arme.id}}">
             {% if arme.id != -1 %}
               <button class="close" type="submit" formaction="desequip/arme/"><span aria-hidden="true">&times;</span></button>
@@ -122,7 +147,7 @@
           <div class="list-group">
 
               {% for objet in inv %}
-                <a href="#" id="btnobjet{{objet.id}}" class="list-group-item list-group-item-action "><img src="{% static 'img/sprites/preview/' %}{{objet.nom}}.png" /> {{ objet.id|get_item }}</a>
+                <a href="#" id="btnobjet{{objet.id}}" class="list-group-item list-group-item-action "><img style="width: 30px;" src="{% static 'img/sprites/preview/' %}{{objet.nom}}-icone.png" /> {{ objet.id|get_item }}</a>
               {% endfor %}
         </div>
       </div>
@@ -174,6 +199,19 @@
           });
         {% endfor %}
       });
+
+      var circle = document.querySelector('circle');
+      var radius = circle.r.baseVal.value;
+      var circumference = radius * 2 * Math.PI;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = `${circumference}`;
+
+      function setProgress(percent) {
+        const offset = circumference - percent / 100 * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
+      setProgress({{caracteristiques.exp}})
     </script>
 {% endblock %}
 {% include 'dashboard/footer.html' %}

@@ -43,18 +43,21 @@ class reload_sprite_profile():
     if(f!=5):
       background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f'+str(f)+'-fullbody.png'))
       background.draft('RGB',(300,400))   
+      cheveux = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','cheveux',"cheveux-t3-f"+str(f)+".png"))
+      cheveux.draft('RGB',(300,400))   
+      background.paste(cheveux, (0, 0), cheveux)
       if(Equipement.objects.get(id_id=id).casque != -1):
         casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).casque).nom)+"-f"+str(f)+".png"))
         casque.draft('RGB',(300,400))   
         background.paste(casque, (0, 0), casque)
-      if(Equipement.objects.get(id_id=id).armure != -1):
-        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f"+str(f)+".png"))
-        plastron.draft('RGB',(300,400))  
-        background.paste(plastron, (0, 0), plastron)
       if(Equipement.objects.get(id_id=id).pantalon != -1):
         jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).pantalon).nom)+"-f"+str(f)+".png"))
         jambiere.draft('RGB',(300,400))  
         background.paste(jambiere, (0, 0), jambiere)
+      if(Equipement.objects.get(id_id=id).armure != -1):
+        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f"+str(f)+".png"))
+        plastron.draft('RGB',(300,400))  
+        background.paste(plastron, (0, 0), plastron)
       if(Equipement.objects.get(id_id=id).chaussures != -1):
         chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).chaussures).nom)+"-f"+str(f)+".png"))
         chaussures.draft('RGB',(300,400))  
@@ -67,26 +70,29 @@ class reload_sprite_profile():
       background.save(os.path.join(SITE_ROOT,"static","img","sprites","user",id+"-f"+str(f)+".png"))
       print("loading: ", time.time() - start)
     else:
-      background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis','homme-f1-bis-fullbody.png'))
+      background = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','homme_corps','homme-f1-bis-fullbody.png'))
       background.draft('RGB',(300,400))   
+      cheveux = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','cheveux',"cheveux-t3-f1-bis.png"))
+      cheveux.draft('RGB',(300,400))   
+      background.paste(cheveux, (0, 0), cheveux)
       if(Equipement.objects.get(id_id=id).casque != -1):
-        casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).casque).nom)+"-f1-bis.png"))
+        casque = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','casque',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).casque).nom)+"-f1-bis.png"))
         casque.draft('RGB',(300,400))   
         background.paste(casque, (0, 0), casque)
-      if(Equipement.objects.get(id_id=id).armure != -1):
-        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f1-bis.png"))
-        plastron.draft('RGB',(300,400))  
-        background.paste(plastron, (0, 0), plastron)
       if(Equipement.objects.get(id_id=id).pantalon != -1):
-        jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).pantalon).nom)+"-f1-bis.png"))
+        jambiere = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','jambiere',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).pantalon).nom)+"-f1-bis.png"))
         jambiere.draft('RGB',(300,400))  
         background.paste(jambiere, (0, 0), jambiere)
+      if(Equipement.objects.get(id_id=id).armure != -1):
+        plastron = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','plastron',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).armure).nom)+"-f1-bis.png"))
+        plastron.draft('RGB',(300,400))  
+        background.paste(plastron, (0, 0), plastron)
       if(Equipement.objects.get(id_id=id).chaussures != -1):
-        chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).chaussures).nom)+"-f1-bis.png"))
+        chaussures = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','bottes',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).chaussures).nom)+"-f1-bis.png"))
         chaussures.draft('RGB',(300,400))  
         background.paste(chaussures, (0, 0), chaussures)
       if(Equipement.objects.get(id_id=id).arme != -1):
-        arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','f1-bis',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).arme).nom)+"-f1-bis.png"))
+        arme = Image.open(os.path.join(SITE_ROOT,'static','img','sprites','epee',str(Objet.objects.get(id=Equipement.objects.get(id_id=id).arme).nom)+"-f1-bis.png"))
         arme.draft('RGB',(300,400))
         background.paste(arme, (0, 0), arme)
       print("save: ", time.time() - start)
