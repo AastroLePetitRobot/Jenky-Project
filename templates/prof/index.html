@@ -197,13 +197,13 @@ $(document).ready(function() {
             data.etudiant.forEach(element => {
             if(element[2]){
               $var1='<tr><td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><p style="display: inline; color: white;">'+element[0]+ " " + element[1]+'</p></td >'+
-              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Valider.svg" %}" height="24" width="24" style="margin-right: 20px;"></a></td>        </tr>'+
+              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Valider.svg" " height="24" width="24" style="margin-right: 20px;"></a></td>        </tr>'+
               '<tr>';
               $('#objectif_eleve').append($var1)
 
             } else {
               $var1='<tr><td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><p style="display: inline; color: white;">'+element[0]+ " " + element[1]+'</p></td >'+
-              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Refuser.svg" %}"height="24" width="24"></a></td>        </tr>'+
+              '<td style="background-color: rgb(34, 34, 56); border-color:rgb(11, 11, 35);"><a class="valider" name="'+element[0]+"."+element[1]+'"><img src="/static/Icon/Refuser.svg" "height="24" width="24"></a></td>        </tr>'+
               '<tr>';
               $('#objectif_eleve').append($var1)
             }

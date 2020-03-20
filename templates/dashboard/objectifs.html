@@ -1,0 +1,108 @@
+{% load static %}
+{% load app_filters %}
+
+
+{% include 'dashboard/header.html' %}
+{% block content %}
+
+<div class="container" id="index" >
+  <div class="row mb-4">
+    <h1 class="mt-4">Vos Modules/TP : </h1>   
+  </div>
+    <ul class="list-group" style="width:600px;">
+      {% for u in modules %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" nom_mod="{{u.nom_module.nom_module}}">
+        <a style="color: white;" class="index_module" type="button">{{u.nom_module.nom_module}}</a>
+          <span class="badge badge-primary badge-pill">
+            {% for i in competence %}
+              {% if  i.0 == u.id %}
+              {{i.1}} objectif{% if i.1 > 1 %}s {% endif %}
+              {% endif %}
+              {% endfor %}
+            </span>
+          {% endfor %}
+        </li>
+    </ul>
+  </div>
+  <div class="container" id="module" style="display: none;">
+    <div class="row mb-4" id="module_titre">
+      
+    </div> 
+    <div class="row" id="tableau">
+      <table class="table table-bordered table_obj">
+        <thead   style="background-color: rgb(23, 23, 46); color: white; border-width:0 px;">
+          <tr>
+            <th style="border-color:rgb(11, 11, 35);">Objectif</th>
+            <th style="border-color:rgb(11, 11, 35);">Point d'expérience</th>
+            <th style="border-color:rgb(11, 11, 35);">Validé</th>
+          </tr>
+        </thead>
+        <tbody style="background-color: rgb(34, 34, 56); color: white;" id="tableau_module_objectif">
+          
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row mt-0">
+      <div class="col">
+        <a class="nav-link" href="#" style="color:white;"><button id="module_retour" type="button" class="btn" style="color: white; border-color: #2c2c40; background-color:#2c2c40;">Retour</button></a> 
+      </div>
+
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+        $('#module_retour').click(function(event){ 
+          $('#tableau_module_objectif').empty()
+          $('#module_titre').empty()
+          $( '#module' ).css( "display","none" );
+          $( '#index' ).css( "display","block" );
+        });
+        $('.index_module').click(function(event){
+          $.ajax({ type: 'POST', url: '/dashboard/apiobj/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'module'},   success: f});
+        });
+          function f(data){
+            console.log(data)
+            $( '#index' ).hide()
+            $( '#module' ).show()
+            if(data.objectif.length != 0){
+              data.objectif.forEach(element => {
+                if(element[2] == true){
+                  $var = '<tr><td style="border-color:rgb(11, 11, 35);">'+
+                  '<a class="module_objectif" type="button" >'+element[0]+'</a>'+
+                '</td>'+
+                '<td style="border-color:rgb(11, 11, 35);">'+element[1]+'</td>'+
+                '<td style="border-color:rgb(11, 11, 35);"><img src="/static/Icon/Valider.svg" "height="24" width="24"></td>'
+                } else {
+                  $var = '<tr><td style="border-color:rgb(11, 11, 35);">'+
+                  '<a class="module_objectif" type="button" >'+element[0]+'</a>'+
+                '</td>'+
+                '<td style="border-color:rgb(11, 11, 35);">'+element[1]+'</td>'+
+                '<td style="border-color:rgb(11, 11, 35);"><img src="/static/Icon/Refuser.svg" "height="24" width="24"></td>'
+                }
+                
+                $('#tableau_module_objectif').append($var)
+              });
+            } else {
+              console.log("Aucun objectif trouvé")
+
+            }
+            $("#module_titre").append('<h1 class="mt-4" id="module_name">Module '+data.nom_module+'</h1>' )
+            $('#button_objectif').click(function(event){
+              $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$('#module_name').text().replace("Module ",""), toDownload:'module'},   success: f2});
+            });   
+
+           
+          }
+        function f2(data){
+          $('#form_ajout').append('<div class="form-group">'+
+                      '<input type="hidden" value="'+data.nom_module+'" name="module" placeholder="module" class="form-control">'+
+                      '</div>')
+
+        }
+      })
+</script>
+
+{% endblock %}
+{% include 'dashboard/footer.html' %}

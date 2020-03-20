@@ -711,3 +711,51 @@ class ApiChargeSprite(TemplateView):
       reload_sprite_profile.reload(joueur1,i)
       reload_sprite_profile.reload(joueur2,i)
     return JsonResponse({"ok":"ok"}, safe=False)
+
+class ObjectifView(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+    return super(ObjectifView, self).dispatch(*args, **kwargs)
+  def get(self, request, **kwargs):
+    modules = Prof_TP.objects.filter(prof_id=request.user.id)
+    objectif = Competence_Module.objects.all()
+    competence=[]
+    caracteristiques = Caracteristiques.objects.get(id_id=request.user.id)
+    for i in modules:
+      competence.append([i.id,Competence_Module.objects.filter(nom_module_id=i.nom_module_id).distinct("nom_competence").count()])
+    return render(request, 'dashboard/objectifs.html', {'caracteristiques':caracteristiques, 'modules':modules,'competence':competence,'objectif':objectif}) 
+
+class ObjectifApi(TemplateView):
+  @method_decorator(user_passes_test(etudiant_check))
+  def dispatch(self, *args, **kwargs):
+    return super(ObjectifApi, self).dispatch(*args, **kwargs)
+  def post(self, request, **kwargs):
+    if request.POST.get('toDownload') == 'module':
+      print (request.POST.get('valeur'))
+      module = Module.objects.get(nom_module=request.POST.get('valeur'))
+      objectif = Competence_Module.objects.filter(nom_module_id=module.id, etudiant_id=request.user.id)
+      objectifs=[]
+      for i in objectif:
+        if([i.nom_competence,i.nombre_exp_gagne] not in objectifs):
+          objectifs.append([i.nom_competence,i.nombre_exp_gagne,i.valide])
+      tosend = {
+        'objectif' : objectifs,
+        'nom_module' : module.nom_module,
+      }
+    elif request.POST.get('toDownload') == 'valider':
+      objectif = request.POST.get('obj')
+      last_name = request.POST.get('name').split('.')[0]
+      first_name = request.POST.get('name').split('.')[1]
+      us = User.objects.get(first_name = first_name, last_name=last_name)
+      Competence_Module.objects.filter(nom_competence=objectif,etudiant_id=us.id).update(valide=True)
+      tosend={'ok':'ok'}
+    elif request.POST.get('toDownload') == 'refuser':
+      objectif = request.POST.get('obj')
+      last_name = request.POST.get('name').split('.')[0]
+      first_name = request.POST.get('name').split('.')[1]
+      us = User.objects.get(first_name = first_name, last_name=last_name)
+      Competence_Module.objects.filter(nom_competence=objectif,etudiant_id=us.id).update(valide=False)
+      tosend={'ok':'ok'}
+    return JsonResponse(tosend, safe=False)
+  def get(self, request, **kwargs):
+    return render(request, 'dashboardProf/empty.html') 

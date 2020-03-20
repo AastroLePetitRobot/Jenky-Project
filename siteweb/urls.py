@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^logout/$', LogoutView.as_view()),
     # dashboard
     url(r'^dashboard/$', IndexView.as_view()),
+    url(r'^dashboard/objectifs/$', ObjectifView.as_view()),
+    url(r'^dashboard/apiobj/$', ObjectifApi.as_view()),
     # monjenky
     url(r'^dashboard/monjenky/$', MonJenkyView.as_view()),
     # api monjenky 
