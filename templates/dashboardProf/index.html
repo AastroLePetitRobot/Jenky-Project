@@ -2,7 +2,7 @@
 {% load app_filters %}
 
 
-{% include 'prof/header.html' %}
+{% include 'dashboardProf/header.html' %}
 {% block content %}
 
 <div class="container" id="index" >
@@ -118,16 +118,21 @@
       </div>
     </div>
 {% endblock %}
-{% include 'prof/footer.html' %}
+{% include 'dashboardProf/footer.html' %}
 
 
 <script>
+$(document).ready(function() {
         $('.index_module').click(function(event){
-          $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'module'},   success: f});
+          $.ajax({ type: 'POST', url: '/dashboardProf/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'module'},   success: f});
         }); 
         
         
-       
+        $('.module_objectif').click(function(event){ 
+          console.log('test')
+          $.ajax({ type: 'POST', url: '/dashboardProf/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
+        });
+        
         $('#module_retour').click(function(event){ 
           $('#tableau_module_objectif').empty()
           $( '#module' ).css( "display","none" );
@@ -140,6 +145,7 @@
           $( '#module' ).css( "display","block" );
           //$.ajax({ type: 'POST', url: 'ajax.php', data: { texte:$("input").val() }, success: console.log("test") })
         });
+    });
         function f(data){
             $( '#index' ).css( "display","none" );
             $( '#module' ).css( "display","block" );
@@ -153,11 +159,6 @@
               '</tr>'
               $('#tableau_module_objectif').append($var)
             });   
-               $('.module_objectif').click(function(event){ 
-                console.log('test')
-                $.ajax({ type: 'POST', url: '/prof/ApiProf/',headers: { "X-CSRFToken": getCookie("csrftoken") }, data: { valeur:$(this).text(), toDownload:'objectif'},   success: f1});
-              });
-        
             }
         function f1(data){
             $( '#module' ).css( "display","none" );

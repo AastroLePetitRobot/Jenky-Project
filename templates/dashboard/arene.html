@@ -99,7 +99,6 @@ $(".attaquer-combat").click(function(){
           data: {'joueur1' : {{user.id}},
                 'joueur2' : idj2},
           success: function(data){
-              console.log("Les personnes ont bien étés rafraichi")
               $("#loading").hide()
               $("#game").show()
               game = new Phaser.Game(config);
@@ -164,7 +163,7 @@ var config = {
   }
 };
 function preload (){
-  this.load.image('bg', "/static/img/background.png");
+  this.load.image('bg', "/static/img/arene.png");
   this.load.image('j1p1' , '/static/img/sprites/user/'+{{user.id}}+'-f1.png')
   this.load.image('j1p1bis' , '/static/img/sprites/user/'+{{user.id}}+'-f1-bis.png')
   this.load.image('j1p2' , '/static/img/sprites/user/'+{{user.id}}+'-f2.png')
@@ -256,8 +255,8 @@ function create (){
   pprogressBox.fillRect(470, 0, 160, 80);
   score = this.add.text(510, 25, formatTime(this.initialTime), { fontSize: '32px'});
   timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
-  pusername = this.add.text(0, 50, "{{user.username}}", { fontSize: '20px'});
-  ppusername = this.add.text(800, 50, nomadversaire, { fontSize: '20px'});
+  pusername = this.add.text(0, 50, "{{user.username}}", { fontSize: '20px', color:'black'});
+  ppusername = this.add.text(800, 50, nomadversaire, { fontSize: '20px', color:'black'});
   ppusername.x = config.width - ppusername.width;
   tourjoueur1 = false
   tourjoueur2 = false
@@ -291,7 +290,6 @@ function update (){
         lancer_attaque_j2()
       } else if(lastplayed == 2 && tourjoueur1) {
         lancer_attaque_j1()
-        console.log("le joueur 2 joue")
       }
       attaquer_perso1()
       attaquer_perso2()
@@ -363,7 +361,6 @@ function attaquer_perso1(){
         player.y+=13
       } else {
         player.setTexture('j1p4')
-        console.log("pv")
         j2hp-=degatj1 // on retire 10 hp au joueur 2
         pprogressBar.clear()
         pprogressBar.fillStyle(0x32ea32 , 1);
@@ -387,7 +384,6 @@ function attaquer_perso1(){
         phase4 = true
         tourjoueur1 = false
         tourjoueur2 = true
-        console.log("Au tour du joueur 2")
         lastplayed = 1
         player.x = 100
         player.y = 400
@@ -415,7 +411,6 @@ function attaquer_perso2(){
         player2.y+=13
       } else {
         player2.setTexture('j2p4')
-        console.log("pv")
         j1hp-=degatj2 // on retire 10 hp au joueur 2
         progressBar.clear()
         progressBar.fillStyle(0x32ea32 , 1);
@@ -439,7 +434,6 @@ function attaquer_perso2(){
         pphase4 = true
         tourjoueur2 = false
         tourjoueur1 = true
-        console.log("au tour du joueur 1")
         lastplayed = 2
         player2.x = 1000
         player2.y = 400

@@ -10,6 +10,8 @@ from siteweb.models import Inventaire
 from siteweb.models import Inventaire
 from siteweb.models import Prof_TP
 from siteweb.models import Shop
+from siteweb.models import Competence_Module
+from siteweb.models import Module
 from siteweb.models import Prof
 from siteweb.models import Combat
 from PIL import ImageTk, Image
@@ -186,31 +188,35 @@ class IndexView(TemplateView):
     return render(request, self.template_name, {'caracteristiques' : caracteristiques})
 
 class ProfView(TemplateView):
-  template_name = "prof/index.html"
-  @method_decorator(user_passes_test(prof_check))
-  def dispatch(self, *args, **kwargs):
-        return super(ProfView, self).dispatch(*args, **kwargs)
   def get(self, request, **kwargs):
-    prof = Prof.objects.get(id_id=request.user.id)
     modules = Prof_TP.objects.filter(prof_id=request.user.id)
-    return render(request, self.template_name, {'prof' : prof, 'modules':modules})
+    objectif = Competence_Module.objects.all()
+    competence=[]
+    for i in modules:
+      print(i.nom_module_id)
+      competence.append([i.id,Competence_Module.objects.filter(nom_module_id=i.nom_module_id).count()])
+    return render(request, 'prof/index.html', {'modules':modules,'competence':competence,'objectif':objectif}) 
 
-class ProfApi(TemplateView):
-  @method_decorator(user_passes_test(etudiant_check))
-  def dispatch(self, *args, **kwargs):
-        return super(ApiInfoUser, self).dispatch(*args, **kwargs)
-  def post(self, request, **kwargs):
-    querry = request.POST.get('id')
+class ApiProf(TemplateView):
+ def post(self, request, **kwargs):
+  print('cacatest')
+  if request.POST.get('toDownload') == 'module':
+    print('caca')
+    print (request.POST.get('valeur'))
+    module = Module.objects.get(nom_module=request.POST.get('valeur'))
+    objectif = Competence_Module.objects.filter(nom_module_id=module.id)
+    objectifs=[]
+    for i in objectif:
+      objectifs.append([i.id,i.nom_competence,i.nombre_exp_gagne])
     tosend = {
-      'id' : req.id.id,
-      'atq' : req.attaque,
-      'def' : req.defense,
-      'spd' : req.vitesse,
-      'acc' : req.precision,
+      'objectif' : objectifs,
+      'nom_module' : module.nom_module,
     }
-    return JsonResponse(tosend, safe=False)
+  if request.POST.get('toDownload') == 'objectif':
+    print("Caca")
+  return JsonResponse(tosend, safe=False)
   def get(self, request, **kwargs):
-    return render(request, 'layouts/empty.html') 
+    return render(request, 'dashboardProf/empty.html') 
 
 class MonJenkyView(TemplateView):
   template_name = "dashboard/monjenky.html"

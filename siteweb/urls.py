@@ -43,6 +43,6 @@ urlpatterns = [
     url(r'^proflogin/$', LoginProfView.as_view()),
     url(r'^prof/$', ProfView.as_view()),
     #api prof
-    url(r'^prof/api/$', ProfApi.as_view()),
     url(r'^dashboard/arene/chargecarac/$', ApiChargeSprite.as_view()),
+    url(r'^prof/ApiProf/$',ApiProf.as_view()),
 ]
